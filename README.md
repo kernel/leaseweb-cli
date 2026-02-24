@@ -1,6 +1,6 @@
 # lw — CLI for the Leaseweb API
 
-A command-line interface for managing [Leaseweb](https://www.leaseweb.com/) infrastructure: dedicated servers, public cloud instances, IP addresses, invoices, DNS, and more.
+A command-line interface for managing [Leaseweb](https://www.leaseweb.com/) infrastructure: dedicated servers, public cloud instances, VPS, virtual servers, private clouds, CDN, DNS, email, and more.
 
 ## Installation
 
@@ -80,23 +80,44 @@ NAME:
 USAGE:
    lw [global options] [command [command options]]
 
+VERSION:
+   dev
+
 COMMANDS:
-   config                 Manage CLI configuration
-   dedicated-servers, ds  Manage dedicated servers
-   domains                Manage hosting domains
-   instances, i           Manage public cloud instances
-   invoices               Manage invoices
-   ips                    Manage IP addresses
-   load-balancers, lb     Manage public cloud load balancers
-   private-networks, pn   Manage private networks
-   services               Manage services
+   abuse-reports, abuse    Manage abuse reports
+   acronis-backup, backup  Manage Acronis backup
+   aggregation-packs, ap   Manage aggregation packs
+   api-keys, keys          Manage API keys
+   cdn, c                  Manage CDN resources
+   colocations, colo       Manage colocations
+   config                  Manage CLI configuration
+   datacenter-access, dca  Manage datacenter access requests
+   dedicated-racks, dr     Manage dedicated racks
+   dedicated-servers, ds   Manage dedicated servers
+   domains                 Manage hosting domains
+   emails, email           Manage email services
+   floating-ips, fip       Manage floating IPs
+   instances, i            Manage public cloud instances
+   invoices                Manage invoices
+   ips                     Manage IP addresses
+   load-balancers, lb      Manage public cloud load balancers
+   network-equipment, ne   Manage dedicated network equipment
+   private-clouds, pc      Manage private clouds
+   private-networks, pn    Manage private networks
+   remote-management, rm   Manage OpenVPN remote management
+   services                Manage services
+   storage                 Manage storage
+   traffic-policy, tp      Manage traffic policies
+   virtual-servers, vs     Manage virtual servers
+   vps, v                  Manage VPS instances
+   webhosting, wh          Manage webhosting packages
 
 GLOBAL OPTIONS:
    --profile string, -p string  Config profile to use
    --api-key string             Leaseweb API key (overrides profile)
    --base-url string            Override the base URL for API requests
    --debug                      Enable debug logging of HTTP requests
-   --format string              Output format: auto, json, pretty, raw, yaml (default: "auto")
+   --format string              Output format (one of: auto, json, pretty, raw, yaml) (default: "auto")
    --transform string           GJSON expression to transform output
    --help, -h                   show help
    --version, -v                print the version
@@ -169,17 +190,35 @@ lw ds list --format raw --transform "servers.#.id"
 
 Use `lw <command> --help` for details on any subcommand. Here's a summary:
 
-| Command | Alias | Subcommands |
+| Command | Alias | Description |
 |---------|-------|-------------|
-| `dedicated-servers` | `ds` | list, get, update, power-on/off/cycle, power-status, rescue, install, credentials, jobs, hardware-info, metrics, network-interfaces |
-| `instances` | `i` | list, get, launch, terminate, start, stop, reboot, update, console, credentials, ips, snapshots, metrics, regions, types, images |
-| `ips` | | list, get, update, null-route, remove-null-route, null-route-history, reverse-lookup |
-| `invoices` | | list, get, pdf, proforma |
-| `services` | | list, get, update, cancel, uncancel, cancellation-reasons |
-| `domains` | | list, get, dns, dns-get, dns-create, dns-delete |
-| `load-balancers` | `lb` | list, get, create, update, delete, listeners |
-| `private-networks` | `pn` | list, get, create, update, delete, servers |
+| `abuse-reports` | `abuse` | List, get, resolve abuse reports, manage messages and attachments |
+| `acronis-backup` | `backup` | List backup items, get details, view metrics |
+| `aggregation-packs` | `ap` | List and get aggregation packs |
+| `api-keys` | `keys` | CRUD API keys, validate keys, list capabilities |
+| `cdn` | `c` | Distributions, origins, cache, SSL, WAF, geo-restrictions, metrics |
+| `colocations` | `colo` | CRUD colocations, credentials, IPs, metrics, notifications |
 | `config` | | init, show |
+| `datacenter-access` | `dca` | Access requests, datacenters, contacts, visitors |
+| `dedicated-racks` | `dr` | CRUD racks, credentials, IPs, metrics, notifications |
+| `dedicated-servers` | `ds` | Full server lifecycle, credentials, IPs, jobs, metrics, DHCP, notifications |
+| `domains` | | DNS records, DNSSEC, nameservers, contacts, locks, zone import/export |
+| `emails` | `email` | Domains, mailboxes, forwards, aliases, spam filter, auto-reply |
+| `floating-ips` | `fip` | CRUD floating IP ranges, definitions, assign/unassign |
+| `instances` | `i` | Full instance lifecycle, credentials, IPs, snapshots, ISOs, security groups |
+| `invoices` | | List, get, PDF download, proforma, CSV export |
+| `ips` | | List, get, update, null route, reverse lookup (IPv4 + IPv6) |
+| `load-balancers` | `lb` | CRUD, listeners, IPs, metrics, monitoring |
+| `network-equipment` | `ne` | CRUD equipment, credentials, IPs, power, null routes |
+| `private-clouds` | `pc` | CRUD private clouds, credentials, metrics |
+| `private-networks` | `pn` | CRUD networks, servers, DHCP reservations |
+| `remote-management` | `rm` | OpenVPN profiles, credentials |
+| `services` | | List, get, update, cancel/uncancel |
+| `storage` | | List storage, VMs, volumes, grow volumes |
+| `traffic-policy` | `tp` | List, get, update policies, history, reset |
+| `virtual-servers` | `vs` | CRUD servers, credentials, metrics, snapshots, templates |
+| `vps` | `v` | Full VPS lifecycle, credentials, IPs, snapshots, monitoring, notifications |
+| `webhosting` | `wh` | Packages, usernames, domain aliases, catch-all |
 
 ## Development
 

@@ -21,21 +21,56 @@ var dedicatedServersCmd = cli.Command{
 		&dsUpdateCmd,
 		&dsIPsCmd,
 		&dsIPGetCmd,
+		&dsIPUpdateCmd,
+		&dsIPNullCmd,
+		&dsIPUnnullCmd,
 		&dsPowerOnCmd,
 		&dsPowerOffCmd,
 		&dsPowerCycleCmd,
 		&dsPowerStatusCmd,
 		&dsRescueCmd,
+		&dsRescueImagesCmd,
 		&dsInstallCmd,
+		&dsIPMIResetCmd,
 		&dsCredentialsListCmd,
 		&dsCredentialsGetCmd,
 		&dsCredentialsCreateCmd,
+		&dsCredentialsUpdateCmd,
+		&dsCredentialsDeleteCmd,
 		&dsJobsListCmd,
 		&dsJobGetCmd,
+		&dsJobCancelCmd,
+		&dsJobExpireCmd,
+		&dsJobRetryCmd,
 		&dsHardwareInfoCmd,
+		&dsHardwareMonitoringCmd,
+		&dsHardwareMonitoringAllCmd,
+		&dsHardwareScanCmd,
 		&dsMetricsBandwidthCmd,
 		&dsMetricsDatatrafficCmd,
 		&dsNetworkInterfacesCmd,
+		&dsLeasesListCmd,
+		&dsLeasesCreateCmd,
+		&dsLeasesDeleteCmd,
+		&dsNullRouteHistoryCmd,
+		&dsNotifBandwidthListCmd,
+		&dsNotifBandwidthGetCmd,
+		&dsNotifBandwidthCreateCmd,
+		&dsNotifBandwidthUpdateCmd,
+		&dsNotifBandwidthDeleteCmd,
+		&dsNotifDatatrafficListCmd,
+		&dsNotifDatatrafficGetCmd,
+		&dsNotifDatatrafficCreateCmd,
+		&dsNotifDatatrafficUpdateCmd,
+		&dsNotifDatatrafficDeleteCmd,
+		&dsNotifDDoSGetCmd,
+		&dsNotifDDoSUpdateCmd,
+		&dsOSListCmd,
+		&dsOSGetCmd,
+		&dsOSControlPanelsCmd,
+		&dsControlPanelsCmd,
+		&dsPrivateNetworkAddCmd,
+		&dsPrivateNetworkRemoveCmd,
 	},
 	HideHelpCommand: true,
 }
@@ -717,4 +752,868 @@ func handleDSNetworkInterfaces(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsIPUpdateCmd = cli.Command{
+	Name:      "ip-update",
+	Usage:     "Update an IP for a dedicated server",
+	ArgsUsage: "<server-id> <ip>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "reverse-lookup", Usage: "Reverse lookup hostname", Required: true},
+	},
+	Action:          handleDSIPUpdate,
+	HideHelpCommand: true,
+}
+
+func handleDSIPUpdate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("server ID and IP required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	body, _ := json.Marshal(map[string]string{"reverseLookup": cmd.String("reverse-lookup")})
+	res, err := client.PutJSON(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/ips/%s", args[0], args[1]), body)
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsIPNullCmd = cli.Command{
+	Name:      "ip-null",
+	Usage:     "Null route an IP on a dedicated server",
+	ArgsUsage: "<server-id> <ip>",
+	Action:    handleDSIPNull,
+	HideHelpCommand: true,
+}
+
+func handleDSIPNull(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("server ID and IP required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Post(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/ips/%s/null", args[0], args[1]), "")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Null routed %s on %s\n", args[1], args[0])
+	return nil
+}
+
+var dsIPUnnullCmd = cli.Command{
+	Name:      "ip-unnull",
+	Usage:     "Remove null route from an IP on a dedicated server",
+	ArgsUsage: "<server-id> <ip>",
+	Action:    handleDSIPUnnull,
+	HideHelpCommand: true,
+}
+
+func handleDSIPUnnull(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("server ID and IP required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Post(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/ips/%s/unnull", args[0], args[1]), "")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Removed null route from %s on %s\n", args[1], args[0])
+	return nil
+}
+
+var dsRescueImagesCmd = cli.Command{
+	Name:            "rescue-images",
+	Usage:           "List available rescue images",
+	Action:          handleDSRescueImages,
+	HideHelpCommand: true,
+}
+
+func handleDSRescueImages(ctx context.Context, cmd *cli.Command) error {
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/bareMetals/v2/rescueImages")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsIPMIResetCmd = cli.Command{
+	Name:      "ipmi-reset",
+	Usage:     "Launch IPMI reset for a dedicated server",
+	ArgsUsage: "<server-id>",
+	Action:    handleDSIPMIReset,
+	HideHelpCommand: true,
+}
+
+func handleDSIPMIReset(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Post(ctx, "/bareMetals/v2/servers/"+args[0]+"/ipmiReset", "")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "IPMI reset initiated for %s\n", args[0])
+	return nil
+}
+
+var dsCredentialsUpdateCmd = cli.Command{
+	Name:      "credential-update",
+	Usage:     "Update server credentials",
+	ArgsUsage: "<server-id> <type> <username>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "password", Usage: "New password", Required: true},
+	},
+	Action:          handleDSCredentialsUpdate,
+	HideHelpCommand: true,
+}
+
+func handleDSCredentialsUpdate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 3 {
+		return fmt.Errorf("server ID, type, and username required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	body, _ := json.Marshal(map[string]string{"password": cmd.String("password")})
+	res, err := client.PutJSON(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/credentials/%s/%s", args[0], args[1], args[2]), body)
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsCredentialsDeleteCmd = cli.Command{
+	Name:            "credential-delete",
+	Usage:           "Delete server credentials",
+	ArgsUsage:       "<server-id> <type> <username>",
+	Action:          handleDSCredentialsDelete,
+	HideHelpCommand: true,
+}
+
+func handleDSCredentialsDelete(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 3 {
+		return fmt.Errorf("server ID, type, and username required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/credentials/%s/%s", args[0], args[1], args[2]))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Deleted credential %s/%s for %s\n", args[1], args[2], args[0])
+	return nil
+}
+
+var dsJobCancelCmd = cli.Command{
+	Name:      "job-cancel",
+	Usage:     "Cancel active job for a dedicated server",
+	ArgsUsage: "<server-id>",
+	Action:    handleDSJobCancel,
+	HideHelpCommand: true,
+}
+
+func handleDSJobCancel(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Post(ctx, "/bareMetals/v2/servers/"+args[0]+"/cancelActiveJob", "")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Cancelled active job for %s\n", args[0])
+	return nil
+}
+
+var dsJobExpireCmd = cli.Command{
+	Name:      "job-expire",
+	Usage:     "Expire active job for a dedicated server",
+	ArgsUsage: "<server-id>",
+	Action:    handleDSJobExpire,
+	HideHelpCommand: true,
+}
+
+func handleDSJobExpire(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Post(ctx, "/bareMetals/v2/servers/"+args[0]+"/expireActiveJob", "")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Expired active job for %s\n", args[0])
+	return nil
+}
+
+var dsJobRetryCmd = cli.Command{
+	Name:      "job-retry",
+	Usage:     "Retry a job",
+	ArgsUsage: "<server-id> <job-id>",
+	Action:    handleDSJobRetry,
+	HideHelpCommand: true,
+}
+
+func handleDSJobRetry(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("server ID and job ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Post(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/jobs/%s/retry", args[0], args[1]), "")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Retrying job %s for %s\n", args[1], args[0])
+	return nil
+}
+
+var dsHardwareMonitoringCmd = cli.Command{
+	Name:            "hardware-monitoring",
+	Usage:           "Show hardware monitoring data for a server",
+	ArgsUsage:       "<server-id>",
+	Action:          handleDSHardwareMonitoring,
+	HideHelpCommand: true,
+}
+
+func handleDSHardwareMonitoring(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/bareMetals/v2/servers/"+args[0]+"/hardwareMonitoring")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsHardwareMonitoringAllCmd = cli.Command{
+	Name:            "hardware-monitoring-all",
+	Usage:           "Show hardware monitoring data for all servers",
+	Action:          handleDSHardwareMonitoringAll,
+	HideHelpCommand: true,
+}
+
+func handleDSHardwareMonitoringAll(ctx context.Context, cmd *cli.Command) error {
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/bareMetals/v2/hardwareMonitoring")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsHardwareScanCmd = cli.Command{
+	Name:      "hardware-scan",
+	Usage:     "Launch hardware scan for a dedicated server",
+	ArgsUsage: "<server-id>",
+	Action:    handleDSHardwareScan,
+	HideHelpCommand: true,
+}
+
+func handleDSHardwareScan(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Post(ctx, "/bareMetals/v2/servers/"+args[0]+"/hardwareScan", "")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Hardware scan initiated for %s\n", args[0])
+	return nil
+}
+
+var dsLeasesListCmd = cli.Command{
+	Name:            "leases",
+	Usage:           "List DHCP reservations for a dedicated server",
+	ArgsUsage:       "<server-id>",
+	Action:          handleDSLeasesList,
+	HideHelpCommand: true,
+}
+
+func handleDSLeasesList(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/bareMetals/v2/servers/"+args[0]+"/leases")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsLeasesCreateCmd = cli.Command{
+	Name:      "lease-create",
+	Usage:     "Create a DHCP reservation for a dedicated server",
+	ArgsUsage: "<server-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "payload", Usage: "JSON payload for the reservation", Required: true},
+	},
+	Action:          handleDSLeasesCreate,
+	HideHelpCommand: true,
+}
+
+func handleDSLeasesCreate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PostJSON(ctx, "/bareMetals/v2/servers/"+args[0]+"/leases", []byte(cmd.String("payload")))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Created DHCP reservation for %s\n", args[0])
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsLeasesDeleteCmd = cli.Command{
+	Name:            "lease-delete",
+	Usage:           "Delete a DHCP reservation for a dedicated server",
+	ArgsUsage:       "<server-id>",
+	Action:          handleDSLeasesDelete,
+	HideHelpCommand: true,
+}
+
+func handleDSLeasesDelete(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, "/bareMetals/v2/servers/"+args[0]+"/leases")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Deleted DHCP reservation for %s\n", args[0])
+	return nil
+}
+
+var dsNullRouteHistoryCmd = cli.Command{
+	Name:            "null-route-history",
+	Usage:           "Show null route history for a dedicated server",
+	ArgsUsage:       "<server-id>",
+	Action:          handleDSNullRouteHistory,
+	HideHelpCommand: true,
+}
+
+func handleDSNullRouteHistory(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/bareMetals/v2/servers/"+args[0]+"/nullRouteHistory")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsNotifBandwidthListCmd = cli.Command{
+	Name:            "notif-bandwidth-list",
+	Usage:           "List bandwidth notification settings",
+	ArgsUsage:       "<server-id>",
+	Action:          handleDSNotifBandwidthList,
+	HideHelpCommand: true,
+}
+
+func handleDSNotifBandwidthList(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/notificationSettings/bandwidth", args[0]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsNotifBandwidthGetCmd = cli.Command{
+	Name:            "notif-bandwidth-get",
+	Usage:           "Get a bandwidth notification setting",
+	ArgsUsage:       "<server-id> <notification-id>",
+	Action:          handleDSNotifBandwidthGet,
+	HideHelpCommand: true,
+}
+
+func handleDSNotifBandwidthGet(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("server ID and notification ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/notificationSettings/bandwidth/%s", args[0], args[1]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsNotifBandwidthCreateCmd = cli.Command{
+	Name:      "notif-bandwidth-create",
+	Usage:     "Create a bandwidth notification setting",
+	ArgsUsage: "<server-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "payload", Usage: "JSON payload", Required: true},
+	},
+	Action:          handleDSNotifBandwidthCreate,
+	HideHelpCommand: true,
+}
+
+func handleDSNotifBandwidthCreate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PostJSON(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/notificationSettings/bandwidth", args[0]), []byte(cmd.String("payload")))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsNotifBandwidthUpdateCmd = cli.Command{
+	Name:      "notif-bandwidth-update",
+	Usage:     "Update a bandwidth notification setting",
+	ArgsUsage: "<server-id> <notification-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "payload", Usage: "JSON payload", Required: true},
+	},
+	Action:          handleDSNotifBandwidthUpdate,
+	HideHelpCommand: true,
+}
+
+func handleDSNotifBandwidthUpdate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("server ID and notification ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PutJSON(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/notificationSettings/bandwidth/%s", args[0], args[1]), []byte(cmd.String("payload")))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsNotifBandwidthDeleteCmd = cli.Command{
+	Name:            "notif-bandwidth-delete",
+	Usage:           "Delete a bandwidth notification setting",
+	ArgsUsage:       "<server-id> <notification-id>",
+	Action:          handleDSNotifBandwidthDelete,
+	HideHelpCommand: true,
+}
+
+func handleDSNotifBandwidthDelete(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("server ID and notification ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/notificationSettings/bandwidth/%s", args[0], args[1]))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Deleted bandwidth notification %s for %s\n", args[1], args[0])
+	return nil
+}
+
+var dsNotifDatatrafficListCmd = cli.Command{
+	Name:            "notif-datatraffic-list",
+	Usage:           "List data traffic notification settings",
+	ArgsUsage:       "<server-id>",
+	Action:          handleDSNotifDatatrafficList,
+	HideHelpCommand: true,
+}
+
+func handleDSNotifDatatrafficList(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/notificationSettings/datatraffic", args[0]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsNotifDatatrafficGetCmd = cli.Command{
+	Name:            "notif-datatraffic-get",
+	Usage:           "Get a data traffic notification setting",
+	ArgsUsage:       "<server-id> <notification-id>",
+	Action:          handleDSNotifDatatrafficGet,
+	HideHelpCommand: true,
+}
+
+func handleDSNotifDatatrafficGet(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("server ID and notification ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/notificationSettings/datatraffic/%s", args[0], args[1]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsNotifDatatrafficCreateCmd = cli.Command{
+	Name:      "notif-datatraffic-create",
+	Usage:     "Create a data traffic notification setting",
+	ArgsUsage: "<server-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "payload", Usage: "JSON payload", Required: true},
+	},
+	Action:          handleDSNotifDatatrafficCreate,
+	HideHelpCommand: true,
+}
+
+func handleDSNotifDatatrafficCreate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PostJSON(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/notificationSettings/datatraffic", args[0]), []byte(cmd.String("payload")))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsNotifDatatrafficUpdateCmd = cli.Command{
+	Name:      "notif-datatraffic-update",
+	Usage:     "Update a data traffic notification setting",
+	ArgsUsage: "<server-id> <notification-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "payload", Usage: "JSON payload", Required: true},
+	},
+	Action:          handleDSNotifDatatrafficUpdate,
+	HideHelpCommand: true,
+}
+
+func handleDSNotifDatatrafficUpdate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("server ID and notification ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PutJSON(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/notificationSettings/datatraffic/%s", args[0], args[1]), []byte(cmd.String("payload")))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsNotifDatatrafficDeleteCmd = cli.Command{
+	Name:            "notif-datatraffic-delete",
+	Usage:           "Delete a data traffic notification setting",
+	ArgsUsage:       "<server-id> <notification-id>",
+	Action:          handleDSNotifDatatrafficDelete,
+	HideHelpCommand: true,
+}
+
+func handleDSNotifDatatrafficDelete(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("server ID and notification ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/notificationSettings/datatraffic/%s", args[0], args[1]))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Deleted data traffic notification %s for %s\n", args[1], args[0])
+	return nil
+}
+
+var dsNotifDDoSGetCmd = cli.Command{
+	Name:            "notif-ddos-get",
+	Usage:           "Inspect DDoS notification settings",
+	ArgsUsage:       "<server-id>",
+	Action:          handleDSNotifDDoSGet,
+	HideHelpCommand: true,
+}
+
+func handleDSNotifDDoSGet(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/notificationSettings/ddos", args[0]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsNotifDDoSUpdateCmd = cli.Command{
+	Name:      "notif-ddos-update",
+	Usage:     "Update DDoS notification settings",
+	ArgsUsage: "<server-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "payload", Usage: "JSON payload", Required: true},
+	},
+	Action:          handleDSNotifDDoSUpdate,
+	HideHelpCommand: true,
+}
+
+func handleDSNotifDDoSUpdate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("server ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PutJSON(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/notificationSettings/ddos", args[0]), []byte(cmd.String("payload")))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsOSListCmd = cli.Command{
+	Name:            "os-list",
+	Usage:           "List available operating systems",
+	Flags:           PaginationFlags,
+	Action:          handleDSOSList,
+	HideHelpCommand: true,
+}
+
+func handleDSOSList(ctx context.Context, cmd *cli.Command) error {
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/bareMetals/v2/operatingSystems?"+PaginationQuery(cmd))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsOSGetCmd = cli.Command{
+	Name:            "os-get",
+	Usage:           "Show an operating system",
+	ArgsUsage:       "<os-id>",
+	Action:          handleDSOSGet,
+	HideHelpCommand: true,
+}
+
+func handleDSOSGet(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("OS ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/bareMetals/v2/operatingSystems/"+args[0])
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsOSControlPanelsCmd = cli.Command{
+	Name:            "os-control-panels",
+	Usage:           "List control panels for an operating system",
+	ArgsUsage:       "<os-id>",
+	Action:          handleDSOSControlPanels,
+	HideHelpCommand: true,
+}
+
+func handleDSOSControlPanels(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("OS ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/bareMetals/v2/operatingSystems/"+args[0]+"/controlPanels")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsControlPanelsCmd = cli.Command{
+	Name:            "control-panels",
+	Usage:           "List all control panels",
+	Action:          handleDSControlPanels,
+	HideHelpCommand: true,
+}
+
+func handleDSControlPanels(ctx context.Context, cmd *cli.Command) error {
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/bareMetals/v2/controlPanels")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var dsPrivateNetworkAddCmd = cli.Command{
+	Name:            "private-network-add",
+	Usage:           "Add a server to a private network",
+	ArgsUsage:       "<server-id> <private-network-id>",
+	Action:          handleDSPrivateNetworkAdd,
+	HideHelpCommand: true,
+}
+
+func handleDSPrivateNetworkAdd(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("server ID and private network ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PutJSON(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/privateNetworks/%s", args[0], args[1]), []byte("{}"))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Added server %s to private network %s\n", args[0], args[1])
+	if res.Raw != "" {
+		return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	}
+	return nil
+}
+
+var dsPrivateNetworkRemoveCmd = cli.Command{
+	Name:            "private-network-remove",
+	Usage:           "Remove a server from a private network",
+	ArgsUsage:       "<server-id> <private-network-id>",
+	Action:          handleDSPrivateNetworkRemove,
+	HideHelpCommand: true,
+}
+
+func handleDSPrivateNetworkRemove(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("server ID and private network ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, fmt.Sprintf("/bareMetals/v2/servers/%s/privateNetworks/%s", args[0], args[1]))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Removed server %s from private network %s\n", args[0], args[1])
+	return nil
 }

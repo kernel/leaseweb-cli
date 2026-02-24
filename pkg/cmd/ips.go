@@ -20,7 +20,11 @@ var ipsCmd = cli.Command{
 		&ipsNullRouteCmd,
 		&ipsRemoveNullRouteCmd,
 		&ipsNullRouteHistoryCmd,
+		&ipsNullRouteGetCmd,
+		&ipsNullRouteUpdateCmd,
+		&ipsNullRoutedIPv6Cmd,
 		&ipsReverseLookupCmd,
+		&ipsReverseLookupUpdateCmd,
 	},
 	HideHelpCommand: true,
 }
@@ -223,6 +227,82 @@ func handleIPsNullRouteHistory(ctx context.Context, cmd *cli.Command) error {
 	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
 }
 
+var ipsNullRouteGetCmd = cli.Command{
+	Name:            "null-route-get",
+	Usage:           "Get null route details",
+	ArgsUsage:       "<null-route-id>",
+	Action:          handleIPsNullRouteGet,
+	HideHelpCommand: true,
+}
+
+func handleIPsNullRouteGet(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("null route ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/ipMgmt/v2/nullRoutes/"+args[0])
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var ipsNullRouteUpdateCmd = cli.Command{
+	Name:      "null-route-update",
+	Usage:     "Update a null route",
+	ArgsUsage: "<null-route-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "comment", Usage: "Comment for the null route"},
+	},
+	Action:          handleIPsNullRouteUpdate,
+	HideHelpCommand: true,
+}
+
+func handleIPsNullRouteUpdate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("null route ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	body, _ := json.Marshal(map[string]string{"comment": cmd.String("comment")})
+	res, err := client.PutJSON(ctx, "/ipMgmt/v2/nullRoutes/"+args[0], body)
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var ipsNullRoutedIPv6Cmd = cli.Command{
+	Name:            "null-routed-ipv6",
+	Usage:           "List null routed IPv6 addresses",
+	ArgsUsage:       "<ip>",
+	Action:          handleIPsNullRoutedIPv6,
+	HideHelpCommand: true,
+}
+
+func handleIPsNullRoutedIPv6(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("IP address required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/ipMgmt/v2/ips/"+args[0]+"/nullRouted")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
 var ipsReverseLookupCmd = cli.Command{
 	Name:      "reverse-lookup",
 	Usage:     "List reverse lookup records for an IPv6 range",
@@ -241,6 +321,33 @@ func handleIPsReverseLookup(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 	res, err := client.Get(ctx, "/ipMgmt/v2/ips/"+args[0]+"/reverseLookup")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var ipsReverseLookupUpdateCmd = cli.Command{
+	Name:      "reverse-lookup-update",
+	Usage:     "Set or remove reverse lookup records for an IPv6 range",
+	ArgsUsage: "<ip>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "records", Usage: "JSON array of reverse lookup records", Required: true},
+	},
+	Action:          handleIPsReverseLookupUpdate,
+	HideHelpCommand: true,
+}
+
+func handleIPsReverseLookupUpdate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("IP address required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PutJSON(ctx, "/ipMgmt/v2/ips/"+args[0]+"/reverseLookup", []byte(cmd.String("records")))
 	if err != nil {
 		return err
 	}

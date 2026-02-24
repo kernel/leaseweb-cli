@@ -16,6 +16,7 @@ var invoicesCmd = cli.Command{
 		&invoicesListCmd,
 		&invoicesGetCmd,
 		&invoicesPDFCmd,
+		&invoicesExportCSVCmd,
 		&invoicesProformaCmd,
 	},
 	HideHelpCommand: true,
@@ -129,6 +130,40 @@ func handleInvoicesPDF(ctx context.Context, cmd *cli.Command) error {
 		return fmt.Errorf("writing PDF: %w", err)
 	}
 	fmt.Fprintf(os.Stderr, "Downloaded invoice to %s\n", output)
+	return nil
+}
+
+var invoicesExportCSVCmd = cli.Command{
+	Name:  "export-csv",
+	Usage: "Export invoices as CSV",
+	Flags: []cli.Flag{
+		&cli.StringFlag{
+			Name:    "output",
+			Aliases: []string{"o"},
+			Usage:   "Output file path (default: invoices.csv)",
+		},
+	},
+	Action:          handleInvoicesExportCSV,
+	HideHelpCommand: true,
+}
+
+func handleInvoicesExportCSV(ctx context.Context, cmd *cli.Command) error {
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	data, _, err := client.DoRaw(ctx, "GET", "/invoices/v1/invoices/export/csv")
+	if err != nil {
+		return err
+	}
+	output := cmd.String("output")
+	if output == "" {
+		output = "invoices.csv"
+	}
+	if err := os.WriteFile(output, data, 0644); err != nil {
+		return fmt.Errorf("writing CSV: %w", err)
+	}
+	fmt.Fprintf(os.Stderr, "Exported invoices to %s\n", output)
 	return nil
 }
 

@@ -25,13 +25,50 @@ var instancesCmd = cli.Command{
 		&instancesUpdateCmd,
 		&instancesConsoleCmd,
 		&instancesCredentialsCmd,
+		&instancesCredentialStoreCmd,
+		&instancesCredentialDeleteAllCmd,
+		&instancesCredentialGetCmd,
+		&instancesCredentialUpdateCmd,
+		&instancesCredentialDeleteCmd,
 		&instancesIPsCmd,
+		&instancesIPGetCmd,
+		&instancesIPUpdateCmd,
+		&instancesIPNullCmd,
+		&instancesIPUnnullCmd,
 		&instancesSnapshotsListCmd,
 		&instancesSnapshotCreateCmd,
+		&instancesSnapshotGetCmd,
+		&instancesSnapshotRestoreCmd,
+		&instancesSnapshotDeleteCmd,
+		&instancesReinstallCmd,
+		&instancesReinstallImagesCmd,
+		&instancesCancelTerminationCmd,
+		&instancesResetPasswordCmd,
+		&instancesSecurityGroupsCmd,
+		&instancesAttachSecurityGroupsCmd,
+		&instancesDetachSecurityGroupsCmd,
+		&instancesAddToPrivateNetworkCmd,
+		&instancesRemoveFromPrivateNetworkCmd,
+		&instancesAttachISOCmd,
+		&instancesDetachISOCmd,
+		&instancesUserDataCmd,
+		&instancesMonitoringEnableCmd,
+		&instancesMonitoringStatusCmd,
+		&instancesNotifDatatrafficListCmd,
+		&instancesNotifDatatrafficGetCmd,
+		&instancesNotifDatatrafficCreateCmd,
+		&instancesNotifDatatrafficUpdateCmd,
+		&instancesNotifDatatrafficDeleteCmd,
+		&instancesTypesUpdateCmd,
 		&instancesMetricsCmd,
 		&instancesRegionsCmd,
 		&instancesTypesCmd,
 		&instancesImagesCmd,
+		&instancesImageCreateCmd,
+		&instancesImageUpdateCmd,
+		&instancesISOsCmd,
+		&instancesExpensesCmd,
+		&instancesMarketAppsCmd,
 	},
 	HideHelpCommand: true,
 }
@@ -562,9 +599,9 @@ func handleInstancesTypes(ctx context.Context, cmd *cli.Command) error {
 }
 
 var instancesImagesCmd = cli.Command{
-	Name:   "images",
-	Usage:  "List available images",
-	Action: handleInstancesImages,
+	Name:            "images",
+	Usage:           "List available images",
+	Action:          handleInstancesImages,
 	HideHelpCommand: true,
 }
 
@@ -574,6 +611,946 @@ func handleInstancesImages(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 	res, err := client.Get(ctx, "/publicCloud/v1/images")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesCredentialStoreCmd = cli.Command{
+	Name:      "credential-store",
+	Usage:     "Store credentials for an instance",
+	ArgsUsage: "<instance-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "type", Usage: "Credential type", Required: true},
+		&cli.StringFlag{Name: "username", Usage: "Username", Required: true},
+		&cli.StringFlag{Name: "password", Usage: "Password", Required: true},
+	},
+	Action:          handleInstancesCredentialStore,
+	HideHelpCommand: true,
+}
+
+func handleInstancesCredentialStore(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	body, _ := json.Marshal(map[string]string{
+		"type":     cmd.String("type"),
+		"username": cmd.String("username"),
+		"password": cmd.String("password"),
+	})
+	res, err := client.PostJSON(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/credentials", args[0]), body)
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesCredentialDeleteAllCmd = cli.Command{
+	Name:            "credential-delete-all",
+	Usage:           "Delete all credentials for an instance",
+	ArgsUsage:       "<instance-id>",
+	Action:          handleInstancesCredentialDeleteAll,
+	HideHelpCommand: true,
+}
+
+func handleInstancesCredentialDeleteAll(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/credentials", args[0]))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Deleted all credentials for %s\n", args[0])
+	return nil
+}
+
+var instancesCredentialGetCmd = cli.Command{
+	Name:            "credential-get",
+	Usage:           "Get credentials by type and username",
+	ArgsUsage:       "<instance-id> <type> [username]",
+	Action:          handleInstancesCredentialGet,
+	HideHelpCommand: true,
+}
+
+func handleInstancesCredentialGet(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("instance ID and type required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	path := fmt.Sprintf("/publicCloud/v1/instances/%s/credentials/%s", args[0], args[1])
+	if len(args) >= 3 {
+		path += "/" + args[2]
+	}
+	res, err := client.Get(ctx, path)
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesCredentialUpdateCmd = cli.Command{
+	Name:      "credential-update",
+	Usage:     "Update credentials for a given type and username",
+	ArgsUsage: "<instance-id> <type> <username>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "password", Usage: "New password", Required: true},
+	},
+	Action:          handleInstancesCredentialUpdate,
+	HideHelpCommand: true,
+}
+
+func handleInstancesCredentialUpdate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 3 {
+		return fmt.Errorf("instance ID, type, and username required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	body, _ := json.Marshal(map[string]string{"password": cmd.String("password")})
+	res, err := client.PutJSON(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/credentials/%s/%s", args[0], args[1], args[2]), body)
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesCredentialDeleteCmd = cli.Command{
+	Name:            "credential-delete",
+	Usage:           "Delete a credential for a given type and username",
+	ArgsUsage:       "<instance-id> <type> <username>",
+	Action:          handleInstancesCredentialDelete,
+	HideHelpCommand: true,
+}
+
+func handleInstancesCredentialDelete(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 3 {
+		return fmt.Errorf("instance ID, type, and username required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/credentials/%s/%s", args[0], args[1], args[2]))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Deleted credential %s/%s for %s\n", args[1], args[2], args[0])
+	return nil
+}
+
+var instancesIPGetCmd = cli.Command{
+	Name:            "ip-get",
+	Usage:           "Get IP details for an instance",
+	ArgsUsage:       "<instance-id> <ip>",
+	Action:          handleInstancesIPGet,
+	HideHelpCommand: true,
+}
+
+func handleInstancesIPGet(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("instance ID and IP required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/ips/%s", args[0], args[1]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesIPUpdateCmd = cli.Command{
+	Name:      "ip-update",
+	Usage:     "Update IP address for an instance",
+	ArgsUsage: "<instance-id> <ip>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "reverse-lookup", Usage: "Reverse lookup hostname", Required: true},
+	},
+	Action:          handleInstancesIPUpdate,
+	HideHelpCommand: true,
+}
+
+func handleInstancesIPUpdate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("instance ID and IP required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	body, _ := json.Marshal(map[string]string{"reverseLookup": cmd.String("reverse-lookup")})
+	res, err := client.PutJSON(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/ips/%s", args[0], args[1]), body)
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesIPNullCmd = cli.Command{
+	Name:            "ip-null",
+	Usage:           "Null route an IP for an instance",
+	ArgsUsage:       "<instance-id> <ip>",
+	Action:          handleInstancesIPNull,
+	HideHelpCommand: true,
+}
+
+func handleInstancesIPNull(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("instance ID and IP required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Post(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/ips/%s/null", args[0], args[1]), "")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Null routed %s on %s\n", args[1], args[0])
+	return nil
+}
+
+var instancesIPUnnullCmd = cli.Command{
+	Name:            "ip-unnull",
+	Usage:           "Remove null route from an IP for an instance",
+	ArgsUsage:       "<instance-id> <ip>",
+	Action:          handleInstancesIPUnnull,
+	HideHelpCommand: true,
+}
+
+func handleInstancesIPUnnull(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("instance ID and IP required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Post(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/ips/%s/unnull", args[0], args[1]), "")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Removed null route from %s on %s\n", args[1], args[0])
+	return nil
+}
+
+var instancesSnapshotGetCmd = cli.Command{
+	Name:            "snapshot-get",
+	Usage:           "Get snapshot details",
+	ArgsUsage:       "<instance-id> <snapshot-id>",
+	Action:          handleInstancesSnapshotGet,
+	HideHelpCommand: true,
+}
+
+func handleInstancesSnapshotGet(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("instance ID and snapshot ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/snapshots/%s", args[0], args[1]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesSnapshotRestoreCmd = cli.Command{
+	Name:            "snapshot-restore",
+	Usage:           "Restore an instance snapshot",
+	ArgsUsage:       "<instance-id> <snapshot-id>",
+	Action:          handleInstancesSnapshotRestore,
+	HideHelpCommand: true,
+}
+
+func handleInstancesSnapshotRestore(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("instance ID and snapshot ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PutJSON(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/snapshots/%s", args[0], args[1]), []byte("{}"))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Restored snapshot %s for %s\n", args[1], args[0])
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesSnapshotDeleteCmd = cli.Command{
+	Name:            "snapshot-delete",
+	Usage:           "Delete an instance snapshot",
+	ArgsUsage:       "<instance-id> <snapshot-id>",
+	Action:          handleInstancesSnapshotDelete,
+	HideHelpCommand: true,
+}
+
+func handleInstancesSnapshotDelete(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("instance ID and snapshot ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/snapshots/%s", args[0], args[1]))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Deleted snapshot %s for %s\n", args[1], args[0])
+	return nil
+}
+
+var instancesReinstallCmd = cli.Command{
+	Name:      "reinstall",
+	Usage:     "Reinstall an instance",
+	ArgsUsage: "<instance-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "image", Usage: "Image ID for reinstall", Required: true},
+	},
+	Action:          handleInstancesReinstall,
+	HideHelpCommand: true,
+}
+
+func handleInstancesReinstall(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	body, _ := json.Marshal(map[string]string{"imageId": cmd.String("image")})
+	res, err := client.PutJSON(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/reinstall", args[0]), body)
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesReinstallImagesCmd = cli.Command{
+	Name:            "reinstall-images",
+	Usage:           "List images available for reinstall",
+	ArgsUsage:       "<instance-id>",
+	Action:          handleInstancesReinstallImages,
+	HideHelpCommand: true,
+}
+
+func handleInstancesReinstallImages(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/reinstall/images", args[0]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesCancelTerminationCmd = cli.Command{
+	Name:            "cancel-termination",
+	Usage:           "Cancel instance termination",
+	ArgsUsage:       "<instance-id>",
+	Action:          handleInstancesCancelTermination,
+	HideHelpCommand: true,
+}
+
+func handleInstancesCancelTermination(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Post(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/cancelTermination", args[0]), "")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Cancelled termination for %s\n", args[0])
+	return nil
+}
+
+var instancesResetPasswordCmd = cli.Command{
+	Name:            "reset-password",
+	Usage:           "Reset password for an instance",
+	ArgsUsage:       "<instance-id>",
+	Action:          handleInstancesResetPassword,
+	HideHelpCommand: true,
+}
+
+func handleInstancesResetPassword(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Post(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/resetPassword", args[0]), "")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesSecurityGroupsCmd = cli.Command{
+	Name:            "security-groups",
+	Usage:           "Get instance security groups",
+	ArgsUsage:       "<instance-id>",
+	Action:          handleInstancesSecurityGroups,
+	HideHelpCommand: true,
+}
+
+func handleInstancesSecurityGroups(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/securityGroups", args[0]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesAttachSecurityGroupsCmd = cli.Command{
+	Name:      "attach-security-groups",
+	Usage:     "Attach security groups to instance",
+	ArgsUsage: "<instance-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "payload", Usage: "JSON payload with security group IDs", Required: true},
+	},
+	Action:          handleInstancesAttachSecurityGroups,
+	HideHelpCommand: true,
+}
+
+func handleInstancesAttachSecurityGroups(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PostJSON(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/attachSecurityGroups", args[0]), []byte(cmd.String("payload")))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Attached security groups to %s\n", args[0])
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesDetachSecurityGroupsCmd = cli.Command{
+	Name:      "detach-security-groups",
+	Usage:     "Detach security groups from instance",
+	ArgsUsage: "<instance-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "payload", Usage: "JSON payload with security group IDs", Required: true},
+	},
+	Action:          handleInstancesDetachSecurityGroups,
+	HideHelpCommand: true,
+}
+
+func handleInstancesDetachSecurityGroups(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PostJSON(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/detachSecurityGroups", args[0]), []byte(cmd.String("payload")))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Detached security groups from %s\n", args[0])
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesAddToPrivateNetworkCmd = cli.Command{
+	Name:      "add-to-private-network",
+	Usage:     "Add instance to private network",
+	ArgsUsage: "<instance-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "private-network-id", Usage: "Private network ID", Required: true},
+	},
+	Action:          handleInstancesAddToPrivateNetwork,
+	HideHelpCommand: true,
+}
+
+func handleInstancesAddToPrivateNetwork(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	body, _ := json.Marshal(map[string]string{"privateNetworkId": cmd.String("private-network-id")})
+	res, err := client.PutJSON(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/addToPrivateNetwork", args[0]), body)
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Added %s to private network\n", args[0])
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesRemoveFromPrivateNetworkCmd = cli.Command{
+	Name:            "remove-from-private-network",
+	Usage:           "Remove instance from private network",
+	ArgsUsage:       "<instance-id>",
+	Action:          handleInstancesRemoveFromPrivateNetwork,
+	HideHelpCommand: true,
+}
+
+func handleInstancesRemoveFromPrivateNetwork(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/removeFromPrivateNetwork", args[0]))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Removed %s from private network\n", args[0])
+	return nil
+}
+
+var instancesAttachISOCmd = cli.Command{
+	Name:      "attach-iso",
+	Usage:     "Attach ISO to an instance",
+	ArgsUsage: "<instance-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "iso-id", Usage: "ISO ID", Required: true},
+	},
+	Action:          handleInstancesAttachISO,
+	HideHelpCommand: true,
+}
+
+func handleInstancesAttachISO(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	body, _ := json.Marshal(map[string]string{"isoId": cmd.String("iso-id")})
+	res, err := client.PostJSON(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/attachIso", args[0]), body)
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Attached ISO to %s\n", args[0])
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesDetachISOCmd = cli.Command{
+	Name:            "detach-iso",
+	Usage:           "Detach ISO from an instance",
+	ArgsUsage:       "<instance-id>",
+	Action:          handleInstancesDetachISO,
+	HideHelpCommand: true,
+}
+
+func handleInstancesDetachISO(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Post(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/detachIso", args[0]), "")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Detached ISO from %s\n", args[0])
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesUserDataCmd = cli.Command{
+	Name:            "user-data",
+	Usage:           "Get user data for an instance",
+	ArgsUsage:       "<instance-id>",
+	Action:          handleInstancesUserData,
+	HideHelpCommand: true,
+}
+
+func handleInstancesUserData(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/userData", args[0]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesMonitoringEnableCmd = cli.Command{
+	Name:            "monitoring-enable",
+	Usage:           "Enable monitoring for an instance",
+	ArgsUsage:       "<instance-id>",
+	Action:          handleInstancesMonitoringEnable,
+	HideHelpCommand: true,
+}
+
+func handleInstancesMonitoringEnable(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Post(ctx, fmt.Sprintf("/publicCloud/v1/instance/%s/monitoring/enable", args[0]), "")
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Enabled monitoring for %s\n", args[0])
+	return nil
+}
+
+var instancesMonitoringStatusCmd = cli.Command{
+	Name:            "monitoring-status",
+	Usage:           "Get monitoring status for an instance",
+	ArgsUsage:       "<instance-id>",
+	Action:          handleInstancesMonitoringStatus,
+	HideHelpCommand: true,
+}
+
+func handleInstancesMonitoringStatus(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/publicCloud/v1/instance/%s/monitoring/status", args[0]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesNotifDatatrafficListCmd = cli.Command{
+	Name:            "notif-datatraffic-list",
+	Usage:           "List data traffic notification settings",
+	ArgsUsage:       "<instance-id>",
+	Action:          handleInstancesNotifDatatrafficList,
+	HideHelpCommand: true,
+}
+
+func handleInstancesNotifDatatrafficList(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/notificationSettings/dataTraffic", args[0]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesNotifDatatrafficGetCmd = cli.Command{
+	Name:            "notif-datatraffic-get",
+	Usage:           "Get a data traffic notification setting",
+	ArgsUsage:       "<instance-id> <notification-id>",
+	Action:          handleInstancesNotifDatatrafficGet,
+	HideHelpCommand: true,
+}
+
+func handleInstancesNotifDatatrafficGet(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("instance ID and notification ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/notificationSettings/dataTraffic/%s", args[0], args[1]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesNotifDatatrafficCreateCmd = cli.Command{
+	Name:      "notif-datatraffic-create",
+	Usage:     "Create a data traffic notification setting",
+	ArgsUsage: "<instance-id> <notification-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "payload", Usage: "JSON payload", Required: true},
+	},
+	Action:          handleInstancesNotifDatatrafficCreate,
+	HideHelpCommand: true,
+}
+
+func handleInstancesNotifDatatrafficCreate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("instance ID and notification ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PostJSON(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/notificationSettings/dataTraffic/%s", args[0], args[1]), []byte(cmd.String("payload")))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesNotifDatatrafficUpdateCmd = cli.Command{
+	Name:      "notif-datatraffic-update",
+	Usage:     "Update a data traffic notification setting",
+	ArgsUsage: "<instance-id> <notification-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "payload", Usage: "JSON payload", Required: true},
+	},
+	Action:          handleInstancesNotifDatatrafficUpdate,
+	HideHelpCommand: true,
+}
+
+func handleInstancesNotifDatatrafficUpdate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("instance ID and notification ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PutJSON(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/notificationSettings/dataTraffic/%s", args[0], args[1]), []byte(cmd.String("payload")))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesNotifDatatrafficDeleteCmd = cli.Command{
+	Name:            "notif-datatraffic-delete",
+	Usage:           "Delete a data traffic notification setting",
+	ArgsUsage:       "<instance-id> <notification-id>",
+	Action:          handleInstancesNotifDatatrafficDelete,
+	HideHelpCommand: true,
+}
+
+func handleInstancesNotifDatatrafficDelete(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("instance ID and notification ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/notificationSettings/dataTraffic/%s", args[0], args[1]))
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Deleted notification %s for %s\n", args[1], args[0])
+	return nil
+}
+
+var instancesTypesUpdateCmd = cli.Command{
+	Name:            "types-update",
+	Usage:           "List available instance types for update",
+	ArgsUsage:       "<instance-id>",
+	Action:          handleInstancesTypesUpdate,
+	HideHelpCommand: true,
+}
+
+func handleInstancesTypesUpdate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("instance ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/publicCloud/v1/instances/%s/instanceTypesUpdate", args[0]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesImageCreateCmd = cli.Command{
+	Name:  "image-create",
+	Usage: "Create a custom image",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "payload", Usage: "JSON payload for image creation", Required: true},
+	},
+	Action:          handleInstancesImageCreate,
+	HideHelpCommand: true,
+}
+
+func handleInstancesImageCreate(ctx context.Context, cmd *cli.Command) error {
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PostJSON(ctx, "/publicCloud/v1/images", []byte(cmd.String("payload")))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesImageUpdateCmd = cli.Command{
+	Name:      "image-update",
+	Usage:     "Update a custom image",
+	ArgsUsage: "<image-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "payload", Usage: "JSON payload for image update", Required: true},
+	},
+	Action:          handleInstancesImageUpdate,
+	HideHelpCommand: true,
+}
+
+func handleInstancesImageUpdate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("image ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.PutJSON(ctx, "/publicCloud/v1/images/"+args[0], []byte(cmd.String("payload")))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesISOsCmd = cli.Command{
+	Name:            "isos",
+	Usage:           "List available ISOs",
+	Action:          handleInstancesISOs,
+	HideHelpCommand: true,
+}
+
+func handleInstancesISOs(ctx context.Context, cmd *cli.Command) error {
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/publicCloud/v1/isos")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesExpensesCmd = cli.Command{
+	Name:      "expenses",
+	Usage:     "Get costs for an equipment",
+	ArgsUsage: "<equipment-id>",
+	Action:    handleInstancesExpenses,
+	HideHelpCommand: true,
+}
+
+func handleInstancesExpenses(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("equipment ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, fmt.Sprintf("/publicCloud/v1/equipments/%s/expenses", args[0]))
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var instancesMarketAppsCmd = cli.Command{
+	Name:            "market-apps",
+	Usage:           "List marketplace apps",
+	Action:          handleInstancesMarketApps,
+	HideHelpCommand: true,
+}
+
+func handleInstancesMarketApps(ctx context.Context, cmd *cli.Command) error {
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/publicCloud/v1/marketApps")
 	if err != nil {
 		return err
 	}

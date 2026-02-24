@@ -21,6 +21,9 @@ var privateNetworksCmd = cli.Command{
 		&pnUpdateCmd,
 		&pnDeleteCmd,
 		&pnServersCmd,
+		&pnReservationsListCmd,
+		&pnReservationsCreateCmd,
+		&pnReservationsDeleteCmd,
 	},
 	HideHelpCommand: true,
 }
@@ -191,4 +194,82 @@ func handlePNServers(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var pnReservationsListCmd = cli.Command{
+	Name:            "reservations",
+	Usage:           "List DHCP reservations in a private network",
+	ArgsUsage:       "<network-id>",
+	Action:          handlePNReservationsList,
+	HideHelpCommand: true,
+}
+
+func handlePNReservationsList(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("network ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	res, err := client.Get(ctx, "/bareMetals/v2/privateNetworks/"+args[0]+"/reservations")
+	if err != nil {
+		return err
+	}
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var pnReservationsCreateCmd = cli.Command{
+	Name:      "create-reservation",
+	Usage:     "Create a DHCP reservation in a private network",
+	ArgsUsage: "<network-id>",
+	Flags: []cli.Flag{
+		&cli.StringFlag{Name: "ip", Usage: "IP address", Required: true},
+	},
+	Action:          handlePNReservationsCreate,
+	HideHelpCommand: true,
+}
+
+func handlePNReservationsCreate(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 1 {
+		return fmt.Errorf("network ID required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	body, _ := json.Marshal(map[string]string{"ip": cmd.String("ip")})
+	res, err := client.PostJSON(ctx, "/bareMetals/v2/privateNetworks/"+args[0]+"/reservations", body)
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Created DHCP reservation\n")
+	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+}
+
+var pnReservationsDeleteCmd = cli.Command{
+	Name:            "delete-reservation",
+	Usage:           "Delete a DHCP reservation from a private network",
+	ArgsUsage:       "<network-id> <ip>",
+	Action:          handlePNReservationsDelete,
+	HideHelpCommand: true,
+}
+
+func handlePNReservationsDelete(ctx context.Context, cmd *cli.Command) error {
+	args := cmd.Args().Slice()
+	if len(args) < 2 {
+		return fmt.Errorf("network ID and IP required")
+	}
+	client, err := NewClient(cmd)
+	if err != nil {
+		return err
+	}
+	_, err = client.Delete(ctx, "/bareMetals/v2/privateNetworks/"+args[0]+"/reservations/"+args[1])
+	if err != nil {
+		return err
+	}
+	fmt.Fprintf(os.Stderr, "Deleted DHCP reservation %s\n", args[1])
+	return nil
 }

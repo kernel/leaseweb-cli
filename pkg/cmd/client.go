@@ -193,3 +193,13 @@ func (c *Client) PostJSON(ctx context.Context, path string, jsonBody []byte) (gj
 func (c *Client) PutJSON(ctx context.Context, path string, jsonBody []byte) (gjson.Result, error) {
 	return c.Do(ctx, "PUT", path, bytes.NewReader(jsonBody))
 }
+
+// PatchJSON sends a PATCH with a pre-built JSON body.
+func (c *Client) PatchJSON(ctx context.Context, path string, jsonBody []byte) (gjson.Result, error) {
+	return c.Do(ctx, "PATCH", path, bytes.NewReader(jsonBody))
+}
+
+// DeleteWithBody sends a DELETE with a JSON body.
+func (c *Client) DeleteWithBody(ctx context.Context, path string, jsonBody []byte) (gjson.Result, error) {
+	return c.Do(ctx, "DELETE", path, bytes.NewReader(jsonBody))
+}
