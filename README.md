@@ -33,22 +33,22 @@ lw dedicated-servers list
 
 ### Profiles
 
-For managing multiple Leaseweb accounts, use profiles. Run `lw config init` to set them up interactively:
+For managing multiple Leaseweb accounts, use profiles. Run `lw config init` to set up a profile:
 
 ```sh
 $ lw config init
-Leaseweb CLI Configuration
-
-Profile name (or 'done' to finish) [default]: us
+Profile name, e.g. "us" or "ca": us
 API key for "us": 74B196B1-...
-Profile "us" saved.
-Profile name (or 'done' to finish) [default]: ca
-API key for "ca": BD483105-...
-Profile "ca" saved.
-Profile name (or 'done' to finish) [default]: done
-Default profile [us]: us
+Set "us" as the default profile? (y/n) [y]: y
+Profile "us" saved to ~/.config/lw/config.yaml
 
-Configuration written to ~/.config/lw/config.yaml
+$ lw config init
+Existing profiles: us
+
+Profile name, e.g. "us" or "ca": ca
+API key for "ca": BD483105-...
+Set "ca" as the default profile? (y/n) [n]: n
+Profile "ca" saved to ~/.config/lw/config.yaml
 ```
 
 Then switch profiles with `-p`:
@@ -69,7 +69,7 @@ profiles:
     api_key: "BD483105-..."
 ```
 
-**Resolution order** for API key: `--api-key` flag > `LEASEWEB_API_KEY` env > profile config.
+**Resolution order** for API key: `LEASEWEB_API_KEY` env var > profile config.
 
 ## Usage
 
@@ -114,10 +114,8 @@ COMMANDS:
 
 GLOBAL OPTIONS:
    --profile string, -p string  Config profile to use
-   --api-key string             Leaseweb API key (overrides profile)
-   --base-url string            Override the base URL for API requests
    --debug                      Enable debug logging of HTTP requests
-   --format string              Output format (one of: auto, json, pretty, raw, yaml) (default: "auto")
+   --output string, -o string   Output format (one of: auto, json, jsonline, pretty, raw, yaml) (default: "auto")
    --transform string           GJSON expression to transform output
    --help, -h                   show help
    --version, -v                print the version
@@ -130,7 +128,7 @@ GLOBAL OPTIONS:
 lw dedicated-servers list
 
 # Get server details as YAML
-lw ds get 12490707 --format yaml
+lw ds get 12490707 -o yaml
 
 # Extract a specific field with --transform (uses GJSON syntax)
 lw ds get 12490707 --transform "specs.cpu"
@@ -166,13 +164,14 @@ lw --debug ds list
 
 ### Output formats
 
-| Format   | Description                          |
-|----------|--------------------------------------|
-| `auto`   | Table for list commands, JSON for detail commands (default) |
-| `json`   | Pretty-printed JSON with colors      |
-| `pretty` | Pretty-printed JSON without colors   |
-| `raw`    | Compact JSON, one line               |
-| `yaml`   | YAML output                          |
+| Format     | Description                          |
+|------------|--------------------------------------|
+| `auto`     | Table for lists, structured text for details (default) |
+| `json`     | Pretty-printed JSON with syntax colors |
+| `jsonline` | Compact JSON, single line (useful for piping) |
+| `pretty`   | Pretty-printed JSON without colors   |
+| `raw`      | Raw JSON as returned by the API      |
+| `yaml`     | YAML output                          |
 
 ### Transform
 
@@ -183,7 +182,7 @@ The `--transform` flag accepts [GJSON](https://github.com/tidwall/gjson) express
 lw ds get 12490707 --transform "specs.cpu"
 
 # Get all server IDs from a list
-lw ds list --format raw --transform "servers.#.id"
+lw ds list -o raw --transform "servers.#.id"
 ```
 
 ## Subcommands
