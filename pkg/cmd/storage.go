@@ -37,7 +37,7 @@ func handleStorageList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var storageListVMsCmd = cli.Command{
@@ -56,7 +56,7 @@ func handleStorageListVMs(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var storageVMJobCmd = cli.Command{
@@ -80,7 +80,7 @@ func handleStorageVMJob(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var storageVolumesCmd = cli.Command{
@@ -104,7 +104,7 @@ func handleStorageVolumes(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var storageVolumeGrowCmd = cli.Command{
@@ -131,5 +131,5 @@ func handleStorageVolumeGrow(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }

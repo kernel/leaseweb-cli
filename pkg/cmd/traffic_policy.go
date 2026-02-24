@@ -28,7 +28,7 @@ var tpListCmd = cli.Command{Name: "list", Usage: "List traffic policies", Flags:
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var tpGetCmd = cli.Command{Name: "get", Usage: "Get traffic policy", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -44,7 +44,7 @@ var tpGetCmd = cli.Command{Name: "get", Usage: "Get traffic policy", ArgsUsage: 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var tpUpdateCmd = cli.Command{Name: "update", Usage: "Update traffic policy", ArgsUsage: "<id>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -60,7 +60,7 @@ var tpUpdateCmd = cli.Command{Name: "update", Usage: "Update traffic policy", Ar
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var tpHistoryCmd = cli.Command{Name: "history", Usage: "List policy history", ArgsUsage: "<id>", Flags: PaginationFlags, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -76,7 +76,7 @@ var tpHistoryCmd = cli.Command{Name: "history", Usage: "List policy history", Ar
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var tpResetCmd = cli.Command{Name: "reset", Usage: "Reset traffic policy counters", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {

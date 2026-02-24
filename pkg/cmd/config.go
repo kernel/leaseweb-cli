@@ -54,39 +54,36 @@ func loadConfig() *CLIConfig {
 	return cfg
 }
 
-func resolveProfile(cmd *cli.Command) string {
+func resolveProfile(cmd *cli.Command) (string, error) {
 	if p := cmd.Root().String("profile"); p != "" {
-		return p
+		return p, nil
 	}
 	if p := os.Getenv("LEASEWEB_PROFILE"); p != "" {
-		return p
+		return p, nil
 	}
 	cfg := loadConfig()
 	if cfg.DefaultProfile != "" {
-		return cfg.DefaultProfile
+		return cfg.DefaultProfile, nil
 	}
-	return "default"
+	return "", fmt.Errorf("no profile specified and no default profile set. Use -p <profile>, set LEASEWEB_PROFILE, or run 'lw config init'")
 }
 
 func resolveAPIKey(cmd *cli.Command) (string, error) {
-	if k := cmd.Root().String("api-key"); k != "" {
-		return k, nil
-	}
 	if k := os.Getenv("LEASEWEB_API_KEY"); k != "" {
 		return k, nil
 	}
-	profile := resolveProfile(cmd)
+	profile, err := resolveProfile(cmd)
+	if err != nil {
+		return "", err
+	}
 	cfg := loadConfig()
 	if p, ok := cfg.Profiles[profile]; ok && p.APIKey != "" {
 		return p.APIKey, nil
 	}
-	return "", fmt.Errorf("no API key found for profile %q. Set LEASEWEB_API_KEY, use --api-key, or run 'lw config init'", profile)
+	return "", fmt.Errorf("no API key found for profile %q. Set LEASEWEB_API_KEY or run 'lw config init'", profile)
 }
 
-func resolveBaseURL(cmd *cli.Command) string {
-	if u := cmd.Root().String("base-url"); u != "" {
-		return u
-	}
+func resolveBaseURL() string {
 	if u := os.Getenv("LEASEWEB_BASE_URL"); u != "" {
 		return u
 	}

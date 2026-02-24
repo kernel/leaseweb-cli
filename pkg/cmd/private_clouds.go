@@ -32,7 +32,7 @@ func handlePCList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var pcGetCmd = cli.Command{Name: "get", Usage: "Inspect a private cloud", ArgsUsage: "<id>", Action: handlePCGet, HideHelpCommand: true}
@@ -50,7 +50,7 @@ func handlePCGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var pcCredentialsByTypeCmd = cli.Command{Name: "credentials", Usage: "List credentials by type", ArgsUsage: "<id> <type>", Action: handlePCCredentials, HideHelpCommand: true}
@@ -68,7 +68,7 @@ func handlePCCredentials(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var pcCredentialGetCmd = cli.Command{Name: "credential-get", Usage: "Get credential", ArgsUsage: "<id> <type> <username>", Action: handlePCCredentialGet, HideHelpCommand: true}
@@ -86,7 +86,7 @@ func handlePCCredentialGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 func pcMetricsHandler(metricType string) func(context.Context, *cli.Command) error {
@@ -104,7 +104,7 @@ func pcMetricsHandler(metricType string) func(context.Context, *cli.Command) err
 		if err != nil {
 			return err
 		}
-		return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+		return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 	}
 }
 

@@ -36,7 +36,7 @@ func handleRMProfiles(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var rmProfileGetCmd = cli.Command{
@@ -60,7 +60,7 @@ func handleRMProfileGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var rmChangeCredentialsCmd = cli.Command{
@@ -82,5 +82,5 @@ func handleRMChangeCredentials(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }

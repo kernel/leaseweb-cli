@@ -58,7 +58,7 @@ func handleLBList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	format := cmd.Root().String("format")
+	format := cmd.Root().String("output")
 	if format != "auto" {
 		return ShowResult(os.Stdout, res, format, cmd.Root().String("transform"))
 	}
@@ -115,7 +115,7 @@ func handleLBGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var lbCreateCmd = cli.Command{
@@ -149,7 +149,7 @@ func handleLBCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var lbUpdateCmd = cli.Command{
@@ -185,7 +185,7 @@ func handleLBUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var lbDeleteCmd = cli.Command{
@@ -234,7 +234,7 @@ func handleLBListeners(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var lbStartCmd = cli.Command{
@@ -336,7 +336,7 @@ func handleLBListenerCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var lbListenerGetCmd = cli.Command{
@@ -360,7 +360,7 @@ func handleLBListenerGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var lbListenerUpdateCmd = cli.Command{
@@ -387,7 +387,7 @@ func handleLBListenerUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var lbListenerDeleteCmd = cli.Command{
@@ -436,7 +436,7 @@ func handleLBIPs(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var lbIPGetCmd = cli.Command{
@@ -460,7 +460,7 @@ func handleLBIPGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var lbIPUpdateCmd = cli.Command{
@@ -488,7 +488,7 @@ func handleLBIPUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var lbIPNullCmd = cli.Command{
@@ -573,7 +573,7 @@ func handleLBMetrics(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var lbMonitoringEnableCmd = cli.Command{
@@ -622,5 +622,5 @@ func handleLBMonitoringStatus(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }

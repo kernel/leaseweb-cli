@@ -29,7 +29,7 @@ var akListCmd = cli.Command{Name: "list", Usage: "List API keys", Action: func(c
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var akCreateCmd = cli.Command{Name: "create", Usage: "Create API key", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -41,7 +41,7 @@ var akCreateCmd = cli.Command{Name: "create", Usage: "Create API key", Flags: pa
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var akGetCmd = cli.Command{Name: "get", Usage: "Get API key", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -57,7 +57,7 @@ var akGetCmd = cli.Command{Name: "get", Usage: "Get API key", ArgsUsage: "<id>",
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var akUpdateCmd = cli.Command{Name: "update", Usage: "Update API key", ArgsUsage: "<id>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -73,7 +73,7 @@ var akUpdateCmd = cli.Command{Name: "update", Usage: "Update API key", ArgsUsage
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var akDeleteCmd = cli.Command{Name: "delete", Usage: "Delete API key", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -103,7 +103,7 @@ var akValidateCmd = cli.Command{Name: "validate", Usage: "Validate an API key", 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var akCapabilitiesCmd = cli.Command{Name: "capabilities", Usage: "List available capabilities", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -115,5 +115,5 @@ var akCapabilitiesCmd = cli.Command{Name: "capabilities", Usage: "List available
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}

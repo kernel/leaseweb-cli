@@ -46,7 +46,7 @@ func handlePNList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	format := cmd.Root().String("format")
+	format := cmd.Root().String("output")
 	if format != "auto" {
 		return ShowResult(os.Stdout, res, format, cmd.Root().String("transform"))
 	}
@@ -93,7 +93,7 @@ func handlePNGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var pnCreateCmd = cli.Command{
@@ -116,7 +116,7 @@ func handlePNCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var pnUpdateCmd = cli.Command{
@@ -144,7 +144,7 @@ func handlePNUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var pnDeleteCmd = cli.Command{
@@ -193,7 +193,7 @@ func handlePNServers(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var pnReservationsListCmd = cli.Command{
@@ -217,7 +217,7 @@ func handlePNReservationsList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var pnReservationsCreateCmd = cli.Command{
@@ -246,7 +246,7 @@ func handlePNReservationsCreate(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 	fmt.Fprintf(os.Stderr, "Created DHCP reservation\n")
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var pnReservationsDeleteCmd = cli.Command{

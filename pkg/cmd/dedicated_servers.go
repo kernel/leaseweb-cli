@@ -102,7 +102,7 @@ func handleDSList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	format := cmd.Root().String("format")
+	format := cmd.Root().String("output")
 	if format != "auto" {
 		return ShowResult(os.Stdout, res, format, cmd.Root().String("transform"))
 	}
@@ -113,8 +113,8 @@ func handleDSList(ctx context.Context, cmd *cli.Command) error {
 		return nil
 	}
 
-	table := NewTableWriter(os.Stdout, "ID", "REFERENCE", "SITE", "CHASSIS", "CPU", "RAM", "PUBLIC IP")
-	table.TruncOrder = []int{3, 4, 6}
+	table := NewTableWriter(os.Stdout, "ID", "REFERENCE", "SITE", "CHASSIS", "CPU", "RAM", "STORAGE", "PUBLIC IP")
+	table.TruncOrder = []int{3, 4, 7}
 	servers.ForEach(func(_, s gjson.Result) bool {
 		id := s.Get("id").String()
 		ref := s.Get("reference").String()
@@ -122,12 +122,38 @@ func handleDSList(ctx context.Context, cmd *cli.Command) error {
 		chassis := s.Get("specs.chassis").String()
 		cpu := s.Get("specs.cpu.type").String()
 		ram := fmt.Sprintf("%d %s", s.Get("specs.ram.size").Int(), s.Get("specs.ram.unit").String())
+		storage := formatDisks(s.Get("specs.hdd"))
 		pubIP := s.Get("networkInterfaces.public.ip").String()
-		table.AddRow(id, ref, site, chassis, cpu, ram, pubIP)
+		table.AddRow(id, ref, site, chassis, cpu, ram, storage, pubIP)
 		return true
 	})
 	table.Render()
 	return nil
+}
+
+func formatDisks(hdd gjson.Result) string {
+	if !hdd.Exists() || !hdd.IsArray() {
+		return ""
+	}
+	var parts []string
+	hdd.ForEach(func(_, d gjson.Result) bool {
+		amount := d.Get("amount").Int()
+		size := d.Get("size").Float()
+		unit := d.Get("unit").String()
+		typ := d.Get("type").String()
+		perf := d.Get("performanceType").String()
+
+		sizeStr := fmt.Sprintf("%.2f", size)
+		sizeStr = strings.TrimRight(strings.TrimRight(sizeStr, "0"), ".")
+
+		entry := fmt.Sprintf("%dx%s%s %s", amount, sizeStr, unit, typ)
+		if perf != "" {
+			entry += " " + perf
+		}
+		parts = append(parts, entry)
+		return true
+	})
+	return strings.Join(parts, ", ")
 }
 
 var dsGetCmd = cli.Command{
@@ -151,7 +177,7 @@ func handleDSGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsUpdateCmd = cli.Command{
@@ -183,7 +209,7 @@ func handleDSUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsIPsCmd = cli.Command{
@@ -209,7 +235,7 @@ func handleDSIPs(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	format := cmd.Root().String("format")
+	format := cmd.Root().String("output")
 	if format != "auto" {
 		return ShowResult(os.Stdout, res, format, cmd.Root().String("transform"))
 	}
@@ -256,7 +282,7 @@ func handleDSIPGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsPowerOnCmd = cli.Command{
@@ -355,7 +381,7 @@ func handleDSPowerStatus(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsRescueCmd = cli.Command{
@@ -395,7 +421,7 @@ func handleDSRescue(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsInstallCmd = cli.Command{
@@ -437,7 +463,7 @@ func handleDSInstall(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsCredentialsListCmd = cli.Command{
@@ -473,7 +499,7 @@ func handleDSCredentialsList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsCredentialsGetCmd = cli.Command{
@@ -497,7 +523,7 @@ func handleDSCredentialsGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsCredentialsCreateCmd = cli.Command{
@@ -531,7 +557,7 @@ func handleDSCredentialsCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsJobsListCmd = cli.Command{
@@ -557,7 +583,7 @@ func handleDSJobsList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	format := cmd.Root().String("format")
+	format := cmd.Root().String("output")
 	if format != "auto" {
 		return ShowResult(os.Stdout, res, format, cmd.Root().String("transform"))
 	}
@@ -603,7 +629,7 @@ func handleDSJobGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsHardwareInfoCmd = cli.Command{
@@ -627,7 +653,7 @@ func handleDSHardwareInfo(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsMetricsBandwidthCmd = cli.Command{
@@ -661,7 +687,7 @@ func handleDSMetricsBandwidth(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsMetricsDatatrafficCmd = cli.Command{
@@ -695,7 +721,7 @@ func handleDSMetricsDatatraffic(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsNetworkInterfacesCmd = cli.Command{
@@ -751,7 +777,7 @@ func handleDSNetworkInterfaces(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsIPUpdateCmd = cli.Command{
@@ -779,7 +805,7 @@ func handleDSIPUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsIPNullCmd = cli.Command{
@@ -848,7 +874,7 @@ func handleDSRescueImages(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsIPMIResetCmd = cli.Command{
@@ -901,7 +927,7 @@ func handleDSCredentialsUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsCredentialsDeleteCmd = cli.Command{
@@ -1025,7 +1051,7 @@ func handleDSHardwareMonitoring(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsHardwareMonitoringAllCmd = cli.Command{
@@ -1044,7 +1070,7 @@ func handleDSHardwareMonitoringAll(ctx context.Context, cmd *cli.Command) error 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsHardwareScanCmd = cli.Command{
@@ -1093,7 +1119,7 @@ func handleDSLeasesList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsLeasesCreateCmd = cli.Command{
@@ -1121,7 +1147,7 @@ func handleDSLeasesCreate(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 	fmt.Fprintf(os.Stderr, "Created DHCP reservation for %s\n", args[0])
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsLeasesDeleteCmd = cli.Command{
@@ -1170,7 +1196,7 @@ func handleDSNullRouteHistory(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsNotifBandwidthListCmd = cli.Command{
@@ -1194,7 +1220,7 @@ func handleDSNotifBandwidthList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsNotifBandwidthGetCmd = cli.Command{
@@ -1218,7 +1244,7 @@ func handleDSNotifBandwidthGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsNotifBandwidthCreateCmd = cli.Command{
@@ -1245,7 +1271,7 @@ func handleDSNotifBandwidthCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsNotifBandwidthUpdateCmd = cli.Command{
@@ -1272,7 +1298,7 @@ func handleDSNotifBandwidthUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsNotifBandwidthDeleteCmd = cli.Command{
@@ -1321,7 +1347,7 @@ func handleDSNotifDatatrafficList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsNotifDatatrafficGetCmd = cli.Command{
@@ -1345,7 +1371,7 @@ func handleDSNotifDatatrafficGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsNotifDatatrafficCreateCmd = cli.Command{
@@ -1372,7 +1398,7 @@ func handleDSNotifDatatrafficCreate(ctx context.Context, cmd *cli.Command) error
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsNotifDatatrafficUpdateCmd = cli.Command{
@@ -1399,7 +1425,7 @@ func handleDSNotifDatatrafficUpdate(ctx context.Context, cmd *cli.Command) error
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsNotifDatatrafficDeleteCmd = cli.Command{
@@ -1448,7 +1474,7 @@ func handleDSNotifDDoSGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsNotifDDoSUpdateCmd = cli.Command{
@@ -1475,7 +1501,7 @@ func handleDSNotifDDoSUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsOSListCmd = cli.Command{
@@ -1495,7 +1521,7 @@ func handleDSOSList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsOSGetCmd = cli.Command{
@@ -1519,7 +1545,7 @@ func handleDSOSGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsOSControlPanelsCmd = cli.Command{
@@ -1543,7 +1569,7 @@ func handleDSOSControlPanels(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsControlPanelsCmd = cli.Command{
@@ -1562,7 +1588,7 @@ func handleDSControlPanels(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var dsPrivateNetworkAddCmd = cli.Command{
@@ -1588,7 +1614,7 @@ func handleDSPrivateNetworkAdd(ctx context.Context, cmd *cli.Command) error {
 	}
 	fmt.Fprintf(os.Stderr, "Added server %s to private network %s\n", args[0], args[1])
 	if res.Raw != "" {
-		return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+		return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 	}
 	return nil
 }

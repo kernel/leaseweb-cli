@@ -47,7 +47,7 @@ func handleVPSList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	format := cmd.Root().String("format")
+	format := cmd.Root().String("output")
 	if format != "auto" {
 		return ShowResult(os.Stdout, res, format, cmd.Root().String("transform"))
 	}
@@ -92,7 +92,7 @@ func handleVPSGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsUpdateCmd = cli.Command{
@@ -121,7 +121,7 @@ func handleVPSUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsStartCmd = cli.Command{Name: "start", Usage: "Start a VPS", ArgsUsage: "<vps-id>", Action: handleVPSStart, HideHelpCommand: true}
@@ -201,7 +201,7 @@ func handleVPSReinstall(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsReinstallImagesCmd = cli.Command{
@@ -222,7 +222,7 @@ func handleVPSReinstallImages(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsResetPasswordCmd = cli.Command{Name: "reset-password", Usage: "Reset password", ArgsUsage: "<vps-id>", Action: handleVPSResetPassword, HideHelpCommand: true}
@@ -240,7 +240,7 @@ func handleVPSResetPassword(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsConsoleCmd = cli.Command{Name: "console", Usage: "Get console access", ArgsUsage: "<vps-id>", Action: handleVPSConsole, HideHelpCommand: true}
@@ -258,7 +258,7 @@ func handleVPSConsole(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsCredentialsCmd = cli.Command{Name: "credentials", Usage: "List credentials", ArgsUsage: "<vps-id>", Action: handleVPSCredentials, HideHelpCommand: true}
@@ -276,7 +276,7 @@ func handleVPSCredentials(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsCredentialStoreCmd = cli.Command{
@@ -301,7 +301,7 @@ func handleVPSCredentialStore(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsCredentialDeleteAllCmd = cli.Command{Name: "credential-delete-all", Usage: "Delete all credentials", ArgsUsage: "<vps-id>", Action: handleVPSCredentialDeleteAll, HideHelpCommand: true}
@@ -342,7 +342,7 @@ func handleVPSCredentialGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsCredentialUpdateCmd = cli.Command{
@@ -365,7 +365,7 @@ func handleVPSCredentialUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsCredentialDeleteCmd = cli.Command{Name: "credential-delete", Usage: "Delete credential", ArgsUsage: "<vps-id> <type> <username>", Action: handleVPSCredentialDelete, HideHelpCommand: true}
@@ -402,7 +402,7 @@ func handleVPSIPs(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsIPGetCmd = cli.Command{Name: "ip-get", Usage: "Get IP details", ArgsUsage: "<vps-id> <ip>", Action: handleVPSIPGet, HideHelpCommand: true}
@@ -420,7 +420,7 @@ func handleVPSIPGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsIPUpdateCmd = cli.Command{
@@ -443,7 +443,7 @@ func handleVPSIPUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsIPNullCmd = cli.Command{Name: "ip-null", Usage: "Null route IP", ArgsUsage: "<vps-id> <ip>", Action: handleVPSIPNull, HideHelpCommand: true}
@@ -499,7 +499,7 @@ func handleVPSSnapshots(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsSnapshotCreateCmd = cli.Command{Name: "snapshot-create", Usage: "Create snapshot", ArgsUsage: "<vps-id>", Action: handleVPSSnapshotCreate, HideHelpCommand: true}
@@ -517,7 +517,7 @@ func handleVPSSnapshotCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsSnapshotGetCmd = cli.Command{Name: "snapshot-get", Usage: "Get snapshot", ArgsUsage: "<vps-id> <snapshot-id>", Action: handleVPSSnapshotGet, HideHelpCommand: true}
@@ -535,7 +535,7 @@ func handleVPSSnapshotGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsSnapshotRestoreCmd = cli.Command{Name: "snapshot-restore", Usage: "Restore snapshot", ArgsUsage: "<vps-id> <snapshot-id>", Action: handleVPSSnapshotRestore, HideHelpCommand: true}
@@ -554,7 +554,7 @@ func handleVPSSnapshotRestore(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 	fmt.Fprintf(os.Stderr, "Restored snapshot %s\n", args[1])
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsSnapshotDeleteCmd = cli.Command{Name: "snapshot-delete", Usage: "Delete snapshot", ArgsUsage: "<vps-id> <snapshot-id>", Action: handleVPSSnapshotDelete, HideHelpCommand: true}
@@ -599,7 +599,7 @@ func handleVPSMetrics(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsMonitoringEnableCmd = cli.Command{Name: "monitoring-enable", Usage: "Enable monitoring", ArgsUsage: "<vps-id>", Action: handleVPSMonitoringEnable, HideHelpCommand: true}
@@ -636,7 +636,7 @@ func handleVPSMonitoringStatus(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsNotifDatatrafficListCmd = cli.Command{Name: "notif-datatraffic-list", Usage: "List data traffic notifications", ArgsUsage: "<vps-id>", Action: handleVPSNotifList, HideHelpCommand: true}
@@ -654,7 +654,7 @@ func handleVPSNotifList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsNotifDatatrafficGetCmd = cli.Command{Name: "notif-datatraffic-get", Usage: "Get notification", ArgsUsage: "<vps-id> <id>", Action: handleVPSNotifGet, HideHelpCommand: true}
@@ -672,7 +672,7 @@ func handleVPSNotifGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsNotifDatatrafficCreateCmd = cli.Command{
@@ -693,7 +693,7 @@ func handleVPSNotifCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsNotifDatatrafficUpdateCmd = cli.Command{
@@ -714,7 +714,7 @@ func handleVPSNotifUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsNotifDatatrafficDeleteCmd = cli.Command{Name: "notif-datatraffic-delete", Usage: "Delete notification", ArgsUsage: "<vps-id> <id>", Action: handleVPSNotifDelete, HideHelpCommand: true}
@@ -756,7 +756,7 @@ func handleVPSAttachISO(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 	fmt.Fprintf(os.Stderr, "Attached ISO to %s\n", args[0])
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsDetachISOCmd = cli.Command{Name: "detach-iso", Usage: "Detach ISO", ArgsUsage: "<vps-id>", Action: handleVPSDetachISO, HideHelpCommand: true}
@@ -774,7 +774,7 @@ func handleVPSDetachISO(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vpsISOsCmd = cli.Command{Name: "isos", Usage: "List available ISOs", Action: handleVPSISOs, HideHelpCommand: true}
@@ -788,5 +788,5 @@ func handleVPSISOs(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }

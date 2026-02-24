@@ -42,7 +42,7 @@ func handleServicesList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	format := cmd.Root().String("format")
+	format := cmd.Root().String("output")
 	if format != "auto" {
 		return ShowResult(os.Stdout, res, format, cmd.Root().String("transform"))
 	}
@@ -91,7 +91,7 @@ func handleServicesGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var servicesUpdateCmd = cli.Command{
@@ -121,7 +121,7 @@ func handleServicesUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var servicesCancelCmd = cli.Command{
@@ -201,5 +201,5 @@ func handleServicesCancellationReasons(ctx context.Context, cmd *cli.Command) er
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }

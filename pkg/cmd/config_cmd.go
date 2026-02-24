@@ -38,51 +38,46 @@ func handleConfigInit(_ context.Context, cmd *cli.Command) error {
 	reader := bufio.NewReader(os.Stdin)
 	cfg := loadConfig()
 
-	fmt.Println("Leaseweb CLI Configuration")
-	fmt.Println()
-
 	if len(cfg.Profiles) > 0 {
 		fmt.Printf("Existing profiles: %s\n", strings.Join(profileNames(cfg), ", "))
 		fmt.Println()
 	}
 
-	for {
-		name := prompt(reader, "Profile name (or 'done' to finish)", "default")
-		if strings.ToLower(name) == "done" {
-			break
-		}
+	name := prompt(reader, `Profile name, e.g. "us" or "ca"`, "")
+	if name == "" {
+		return fmt.Errorf("profile name is required")
+	}
 
-		existing := ""
-		if p, ok := cfg.Profiles[name]; ok {
-			existing = p.APIKey
-		}
-
-		apiKey := prompt(reader, fmt.Sprintf("API key for %q", name), existing)
-		if apiKey == "" {
-			fmt.Println("Skipping profile (no API key provided)")
-			continue
-		}
-
-		cfg.Profiles[name] = ProfileConfig{APIKey: apiKey}
-		fmt.Printf("Profile %q saved.\n", name)
-
-		if cfg.DefaultProfile == "" {
-			cfg.DefaultProfile = name
+	if p, ok := cfg.Profiles[name]; ok {
+		fmt.Printf("Profile %q already exists (API key: %s)\n", name, maskKey(p.APIKey))
+		overwrite := prompt(reader, "Overwrite? (y/n)", "n")
+		if strings.ToLower(overwrite) != "y" {
+			fmt.Println("Aborted.")
+			return nil
 		}
 	}
 
-	if len(cfg.Profiles) > 1 || (len(cfg.Profiles) == 1 && cfg.DefaultProfile == "") {
-		def := prompt(reader, "Default profile", cfg.DefaultProfile)
-		if def != "" {
-			cfg.DefaultProfile = def
-		}
+	apiKey := prompt(reader, fmt.Sprintf("API key for %q", name), "")
+	if apiKey == "" {
+		return fmt.Errorf("API key is required")
+	}
+
+	cfg.Profiles[name] = ProfileConfig{APIKey: apiKey}
+
+	defaultDefault := "n"
+	if cfg.DefaultProfile == "" || len(cfg.Profiles) == 1 {
+		defaultDefault = "y"
+	}
+	setDefault := prompt(reader, fmt.Sprintf("Set %q as the default profile? (y/n)", name), defaultDefault)
+	if strings.ToLower(setDefault) == "y" {
+		cfg.DefaultProfile = name
 	}
 
 	if err := writeConfig(cfg); err != nil {
 		return fmt.Errorf("writing config: %w", err)
 	}
 
-	fmt.Printf("\nConfiguration written to %s\n", getConfigPath())
+	fmt.Printf("Profile %q saved to %s\n", name, getConfigPath())
 	return nil
 }
 
@@ -96,7 +91,11 @@ func handleConfigShow(_ context.Context, cmd *cli.Command) error {
 
 	fmt.Printf("Config file: %s\n", getConfigPath())
 	fmt.Printf("Default profile: %s\n", cfg.DefaultProfile)
-	fmt.Printf("Active profile: %s\n", resolveProfile(cmd))
+	active := cfg.DefaultProfile
+	if p, err := resolveProfile(cmd); err == nil {
+		active = p
+	}
+	fmt.Printf("Active profile: %s\n", active)
 	fmt.Println()
 
 	table := NewTableWriter(os.Stdout, "PROFILE", "API KEY", "DEFAULT")

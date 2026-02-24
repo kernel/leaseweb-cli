@@ -29,7 +29,7 @@ var fipListCmd = cli.Command{Name: "list", Usage: "List floating IPs", Flags: Pa
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var fipCreateCmd = cli.Command{Name: "create", Usage: "Create floating IP range", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -41,7 +41,7 @@ var fipCreateCmd = cli.Command{Name: "create", Usage: "Create floating IP range"
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var fipGetCmd = cli.Command{Name: "get", Usage: "Get floating IP range", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -57,7 +57,7 @@ var fipGetCmd = cli.Command{Name: "get", Usage: "Get floating IP range", ArgsUsa
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var fipUpdateCmd = cli.Command{Name: "update", Usage: "Update floating IP range", ArgsUsage: "<id>", Flags: []cli.Flag{&cli.StringFlag{Name: "comment"}}, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -74,7 +74,7 @@ var fipUpdateCmd = cli.Command{Name: "update", Usage: "Update floating IP range"
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var fipDeleteCmd = cli.Command{Name: "delete", Usage: "Delete floating IP range", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -103,7 +103,7 @@ var fipDefinitionsCmd = cli.Command{Name: "definitions", Usage: "List floating I
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var fipAssignCmd = cli.Command{Name: "assign", Usage: "Assign floating IP to server", ArgsUsage: "<id>", Flags: []cli.Flag{&cli.StringFlag{Name: "anchor-ip", Required: true}}, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -120,7 +120,7 @@ var fipAssignCmd = cli.Command{Name: "assign", Usage: "Assign floating IP to ser
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var fipUnassignCmd = cli.Command{Name: "unassign", Usage: "Remove floating IP assignment", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {

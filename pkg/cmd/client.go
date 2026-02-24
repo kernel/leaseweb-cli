@@ -40,7 +40,7 @@ func NewClient(cmd *cli.Command) (*Client, error) {
 	}
 	return &Client{
 		http:    http.DefaultClient,
-		baseURL: resolveBaseURL(cmd),
+		baseURL: resolveBaseURL(),
 		apiKey:  apiKey,
 		debug:   cmd.Root().Bool("debug"),
 	}, nil

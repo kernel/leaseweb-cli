@@ -30,7 +30,7 @@ var dcaListDatacentersCmd = cli.Command{Name: "datacenters", Usage: "List availa
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var dcaListContactsCmd = cli.Command{Name: "contacts", Usage: "List contacts", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -42,7 +42,7 @@ var dcaListContactsCmd = cli.Command{Name: "contacts", Usage: "List contacts", A
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var dcaListAccessCmd = cli.Command{Name: "list", Usage: "List access requests", Flags: PaginationFlags, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -54,7 +54,7 @@ var dcaListAccessCmd = cli.Command{Name: "list", Usage: "List access requests", 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var dcaCreateAccessCmd = cli.Command{Name: "create", Usage: "Create access request", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -66,7 +66,7 @@ var dcaCreateAccessCmd = cli.Command{Name: "create", Usage: "Create access reque
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var dcaGetAccessCmd = cli.Command{Name: "get", Usage: "Get access request", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -82,7 +82,7 @@ var dcaGetAccessCmd = cli.Command{Name: "get", Usage: "Get access request", Args
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var dcaUpdateAccessCmd = cli.Command{Name: "update", Usage: "Update access request", ArgsUsage: "<id>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -98,7 +98,7 @@ var dcaUpdateAccessCmd = cli.Command{Name: "update", Usage: "Update access reque
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var dcaDeleteAccessCmd = cli.Command{Name: "delete", Usage: "Delete access request", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -131,5 +131,5 @@ var dcaListVisitorsCmd = cli.Command{Name: "visitors", Usage: "List visitors for
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}

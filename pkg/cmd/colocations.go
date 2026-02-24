@@ -44,7 +44,7 @@ func coloSimpleGet(subpath string) func(context.Context, *cli.Command) error {
 		if err != nil {
 			return err
 		}
-		return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+		return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 	}
 }
 
@@ -57,7 +57,7 @@ var coloListCmd = cli.Command{Name: "list", Usage: "List colocations", Flags: Pa
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var coloGetCmd = cli.Command{Name: "get", ArgsUsage: "<id>", Action: coloSimpleGet(""), HideHelpCommand: true}
@@ -76,7 +76,7 @@ var coloUpdateCmd = cli.Command{Name: "update", ArgsUsage: "<id>", Flags: []cli.
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var coloCredentialsCmd = cli.Command{Name: "credentials", ArgsUsage: "<id>", Action: coloSimpleGet("/credentials"), HideHelpCommand: true}
@@ -95,7 +95,7 @@ var coloCredentialCreateCmd = cli.Command{Name: "credential-create", ArgsUsage: 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var coloCredentialsByTypeCmd = cli.Command{Name: "credentials-by-type", ArgsUsage: "<id> <type>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -111,7 +111,7 @@ var coloCredentialsByTypeCmd = cli.Command{Name: "credentials-by-type", ArgsUsag
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var coloCredentialGetCmd = cli.Command{Name: "credential-get", ArgsUsage: "<id> <type> <username>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -127,7 +127,7 @@ var coloCredentialGetCmd = cli.Command{Name: "credential-get", ArgsUsage: "<id> 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var coloCredentialUpdateCmd = cli.Command{Name: "credential-update", ArgsUsage: "<id> <type> <username>", Flags: []cli.Flag{&cli.StringFlag{Name: "password", Required: true}}, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -144,7 +144,7 @@ var coloCredentialUpdateCmd = cli.Command{Name: "credential-update", ArgsUsage: 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var coloCredentialDeleteCmd = cli.Command{Name: "credential-delete", ArgsUsage: "<id> <type> <username>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -179,7 +179,7 @@ var coloIPGetCmd = cli.Command{Name: "ip-get", ArgsUsage: "<id> <ip>", Action: f
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var coloIPUpdateCmd = cli.Command{Name: "ip-update", ArgsUsage: "<id> <ip>", Flags: []cli.Flag{&cli.StringFlag{Name: "reverse-lookup", Required: true}}, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -196,7 +196,7 @@ var coloIPUpdateCmd = cli.Command{Name: "ip-update", ArgsUsage: "<id> <ip>", Fla
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var coloIPNullCmd = cli.Command{Name: "ip-null", ArgsUsage: "<id> <ip>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -247,7 +247,7 @@ var coloMetricsBandwidthCmd = cli.Command{Name: "metrics-bandwidth", ArgsUsage: 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var coloMetricsDatatrafficCmd = cli.Command{Name: "metrics-datatraffic", ArgsUsage: "<id>", Flags: []cli.Flag{&cli.StringFlag{Name: "from", Required: true}, &cli.StringFlag{Name: "to", Required: true}, &cli.StringFlag{Name: "aggregation", Value: "SUM"}}, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -264,7 +264,7 @@ var coloMetricsDatatrafficCmd = cli.Command{Name: "metrics-datatraffic", ArgsUsa
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var coloNetworkInterfaceCmd = cli.Command{Name: "network-interface", Usage: "Inspect public network interface", ArgsUsage: "<id>", Action: coloSimpleGet("/networkInterfaces/public"), HideHelpCommand: true}
@@ -305,7 +305,7 @@ func coloNotifHandler(settingType, method string) func(context.Context, *cli.Com
 			if err != nil {
 				return err
 			}
-			return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+			return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 		case "get":
 			if len(args) < 2 {
 				return fmt.Errorf("colocation ID and notification ID required")
@@ -314,7 +314,7 @@ func coloNotifHandler(settingType, method string) func(context.Context, *cli.Com
 			if err != nil {
 				return err
 			}
-			return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+			return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 		case "create":
 			if len(args) < 1 {
 				return fmt.Errorf("colocation ID required")
@@ -323,7 +323,7 @@ func coloNotifHandler(settingType, method string) func(context.Context, *cli.Com
 			if err != nil {
 				return err
 			}
-			return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+			return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 		case "update":
 			if len(args) < 2 {
 				return fmt.Errorf("colocation ID and notification ID required")
@@ -332,7 +332,7 @@ func coloNotifHandler(settingType, method string) func(context.Context, *cli.Com
 			if err != nil {
 				return err
 			}
-			return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+			return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 		case "delete":
 			if len(args) < 2 {
 				return fmt.Errorf("colocation ID and notification ID required")
@@ -373,5 +373,5 @@ var coloNotifDDoSUpdateCmd = cli.Command{Name: "notif-ddos-update", ArgsUsage: "
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}

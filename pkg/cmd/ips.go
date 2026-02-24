@@ -63,7 +63,7 @@ func handleIPsList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	format := cmd.Root().String("format")
+	format := cmd.Root().String("output")
 	if format != "auto" {
 		return ShowResult(os.Stdout, res, format, cmd.Root().String("transform"))
 	}
@@ -112,7 +112,7 @@ func handleIPsGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var ipsUpdateCmd = cli.Command{
@@ -142,7 +142,7 @@ func handleIPsUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var ipsNullRouteCmd = cli.Command{
@@ -177,7 +177,7 @@ func handleIPsNullRoute(ctx context.Context, cmd *cli.Command) error {
 	}
 	fmt.Fprintf(os.Stderr, "Null routed %s\n", args[0])
 	if res.Raw != "" {
-		return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+		return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 	}
 	return nil
 }
@@ -224,7 +224,7 @@ func handleIPsNullRouteHistory(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var ipsNullRouteGetCmd = cli.Command{
@@ -248,7 +248,7 @@ func handleIPsNullRouteGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var ipsNullRouteUpdateCmd = cli.Command{
@@ -276,7 +276,7 @@ func handleIPsNullRouteUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var ipsNullRoutedIPv6Cmd = cli.Command{
@@ -300,7 +300,7 @@ func handleIPsNullRoutedIPv6(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var ipsReverseLookupCmd = cli.Command{
@@ -324,7 +324,7 @@ func handleIPsReverseLookup(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var ipsReverseLookupUpdateCmd = cli.Command{
@@ -351,5 +351,5 @@ func handleIPsReverseLookupUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }

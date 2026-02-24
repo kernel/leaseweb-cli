@@ -36,7 +36,7 @@ var emailDomainsListCmd = cli.Command{Name: "domains", Usage: "List email domain
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailDomainCreateCmd = cli.Command{Name: "domain-create", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -48,7 +48,7 @@ var emailDomainCreateCmd = cli.Command{Name: "domain-create", Flags: payloadFlag
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailDomainGetCmd = cli.Command{Name: "domain-get", ArgsUsage: "<domain>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -64,7 +64,7 @@ var emailDomainGetCmd = cli.Command{Name: "domain-get", ArgsUsage: "<domain>", A
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailDomainUpdateCmd = cli.Command{Name: "domain-update", ArgsUsage: "<domain>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -80,7 +80,7 @@ var emailDomainUpdateCmd = cli.Command{Name: "domain-update", ArgsUsage: "<domai
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailDomainDeleteCmd = cli.Command{Name: "domain-delete", ArgsUsage: "<domain>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -113,7 +113,7 @@ var emailDomainVerifyCmd = cli.Command{Name: "domain-verify", ArgsUsage: "<domai
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailDomainDNSCmd = cli.Command{Name: "domain-dns", ArgsUsage: "<domain>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -129,7 +129,7 @@ var emailDomainDNSCmd = cli.Command{Name: "domain-dns", ArgsUsage: "<domain>", A
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 // Mailboxes
@@ -150,7 +150,7 @@ var emailMailboxesListCmd = cli.Command{Name: "mailboxes", ArgsUsage: "<domain>"
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailMailboxCreateCmd = cli.Command{Name: "mailbox-create", ArgsUsage: "<domain>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -166,7 +166,7 @@ var emailMailboxCreateCmd = cli.Command{Name: "mailbox-create", ArgsUsage: "<dom
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailMailboxGetCmd = cli.Command{Name: "mailbox-get", ArgsUsage: "<domain> <mailbox>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -182,7 +182,7 @@ var emailMailboxGetCmd = cli.Command{Name: "mailbox-get", ArgsUsage: "<domain> <
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailMailboxUpdateCmd = cli.Command{Name: "mailbox-update", ArgsUsage: "<domain> <mailbox>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -198,7 +198,7 @@ var emailMailboxUpdateCmd = cli.Command{Name: "mailbox-update", ArgsUsage: "<dom
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailMailboxDeleteCmd = cli.Command{Name: "mailbox-delete", ArgsUsage: "<domain> <mailbox>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -231,7 +231,7 @@ var emailMailboxAutoReplyCmd = cli.Command{Name: "mailbox-autoreply", ArgsUsage:
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailMailboxAutoReplyUpdateCmd = cli.Command{Name: "mailbox-autoreply-update", ArgsUsage: "<domain> <mailbox>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -247,7 +247,7 @@ var emailMailboxAutoReplyUpdateCmd = cli.Command{Name: "mailbox-autoreply-update
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 // Forwards
@@ -264,7 +264,7 @@ var emailForwardsListCmd = cli.Command{Name: "forwards", ArgsUsage: "<domain>", 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailForwardCreateCmd = cli.Command{Name: "forward-create", ArgsUsage: "<domain>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -280,7 +280,7 @@ var emailForwardCreateCmd = cli.Command{Name: "forward-create", ArgsUsage: "<dom
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailForwardGetCmd = cli.Command{Name: "forward-get", ArgsUsage: "<domain> <forward-id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -296,7 +296,7 @@ var emailForwardGetCmd = cli.Command{Name: "forward-get", ArgsUsage: "<domain> <
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailForwardUpdateCmd = cli.Command{Name: "forward-update", ArgsUsage: "<domain> <forward-id>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -312,7 +312,7 @@ var emailForwardUpdateCmd = cli.Command{Name: "forward-update", ArgsUsage: "<dom
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailForwardDeleteCmd = cli.Command{Name: "forward-delete", ArgsUsage: "<domain> <forward-id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -346,7 +346,7 @@ var emailAliasesListCmd = cli.Command{Name: "aliases", ArgsUsage: "<domain>", Fl
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailAliasCreateCmd = cli.Command{Name: "alias-create", ArgsUsage: "<domain>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -362,7 +362,7 @@ var emailAliasCreateCmd = cli.Command{Name: "alias-create", ArgsUsage: "<domain>
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailAliasGetCmd = cli.Command{Name: "alias-get", ArgsUsage: "<domain> <alias>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -378,7 +378,7 @@ var emailAliasGetCmd = cli.Command{Name: "alias-get", ArgsUsage: "<domain> <alia
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailAliasDeleteCmd = cli.Command{Name: "alias-delete", ArgsUsage: "<domain> <alias>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -412,7 +412,7 @@ var emailSpamFilterCmd = cli.Command{Name: "spam-filter", ArgsUsage: "<domain>",
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var emailSpamFilterUpdateCmd = cli.Command{Name: "spam-filter-update", ArgsUsage: "<domain>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -428,5 +428,5 @@ var emailSpamFilterUpdateCmd = cli.Command{Name: "spam-filter-update", ArgsUsage
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}

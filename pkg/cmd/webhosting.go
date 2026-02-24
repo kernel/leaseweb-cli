@@ -30,7 +30,7 @@ var whListCmd = cli.Command{Name: "list", Usage: "List webhosting packages", Fla
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var whGetCmd = cli.Command{Name: "get", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -46,7 +46,7 @@ var whGetCmd = cli.Command{Name: "get", ArgsUsage: "<id>", Action: func(ctx cont
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var whAvailableCmd = cli.Command{Name: "available", Usage: "List available webhosting packages", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -58,7 +58,7 @@ var whAvailableCmd = cli.Command{Name: "available", Usage: "List available webho
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var whUsernamesCmd = cli.Command{Name: "usernames", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -74,7 +74,7 @@ var whUsernamesCmd = cli.Command{Name: "usernames", ArgsUsage: "<id>", Action: f
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var whUsernameGetCmd = cli.Command{Name: "username-get", ArgsUsage: "<id> <username>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -90,7 +90,7 @@ var whUsernameGetCmd = cli.Command{Name: "username-get", ArgsUsage: "<id> <usern
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var whDomainAliasesCmd = cli.Command{Name: "domain-aliases", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -106,7 +106,7 @@ var whDomainAliasesCmd = cli.Command{Name: "domain-aliases", ArgsUsage: "<id>", 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var whDomainAliasCreateCmd = cli.Command{Name: "domain-alias-create", ArgsUsage: "<id>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -122,7 +122,7 @@ var whDomainAliasCreateCmd = cli.Command{Name: "domain-alias-create", ArgsUsage:
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var whCatchAllCmd = cli.Command{Name: "catch-all", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -138,7 +138,7 @@ var whCatchAllCmd = cli.Command{Name: "catch-all", ArgsUsage: "<id>", Action: fu
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var whCatchAllUpdateCmd = cli.Command{Name: "catch-all-update", ArgsUsage: "<id>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -154,5 +154,5 @@ var whCatchAllUpdateCmd = cli.Command{Name: "catch-all-update", ArgsUsage: "<id>
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}

@@ -91,7 +91,7 @@ func handleInstancesList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	format := cmd.Root().String("format")
+	format := cmd.Root().String("output")
 	if format != "auto" {
 		return ShowResult(os.Stdout, res, format, cmd.Root().String("transform"))
 	}
@@ -150,7 +150,7 @@ func handleInstancesGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesLaunchCmd = cli.Command{
@@ -204,7 +204,7 @@ func handleInstancesLaunch(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesTerminateCmd = cli.Command{
@@ -346,7 +346,7 @@ func handleInstancesUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesConsoleCmd = cli.Command{
@@ -370,7 +370,7 @@ func handleInstancesConsole(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesCredentialsCmd = cli.Command{
@@ -403,7 +403,7 @@ func handleInstancesCredentials(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesIPsCmd = cli.Command{
@@ -427,7 +427,7 @@ func handleInstancesIPs(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesSnapshotsListCmd = cli.Command{
@@ -451,7 +451,7 @@ func handleInstancesSnapshotsList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesSnapshotCreateCmd = cli.Command{
@@ -475,7 +475,7 @@ func handleInstancesSnapshotCreate(ctx context.Context, cmd *cli.Command) error 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesMetricsCmd = cli.Command{
@@ -512,7 +512,7 @@ func handleInstancesMetrics(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesRegionsCmd = cli.Command{
@@ -532,7 +532,7 @@ func handleInstancesRegions(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	format := cmd.Root().String("format")
+	format := cmd.Root().String("output")
 	if format != "auto" {
 		return ShowResult(os.Stdout, res, format, cmd.Root().String("transform"))
 	}
@@ -572,7 +572,7 @@ func handleInstancesTypes(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	format := cmd.Root().String("format")
+	format := cmd.Root().String("output")
 	if format != "auto" {
 		return ShowResult(os.Stdout, res, format, cmd.Root().String("transform"))
 	}
@@ -614,7 +614,7 @@ func handleInstancesImages(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesCredentialStoreCmd = cli.Command{
@@ -648,7 +648,7 @@ func handleInstancesCredentialStore(ctx context.Context, cmd *cli.Command) error
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesCredentialDeleteAllCmd = cli.Command{
@@ -701,7 +701,7 @@ func handleInstancesCredentialGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesCredentialUpdateCmd = cli.Command{
@@ -729,7 +729,7 @@ func handleInstancesCredentialUpdate(ctx context.Context, cmd *cli.Command) erro
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesCredentialDeleteCmd = cli.Command{
@@ -778,7 +778,7 @@ func handleInstancesIPGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesIPUpdateCmd = cli.Command{
@@ -806,7 +806,7 @@ func handleInstancesIPUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesIPNullCmd = cli.Command{
@@ -880,7 +880,7 @@ func handleInstancesSnapshotGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesSnapshotRestoreCmd = cli.Command{
@@ -905,7 +905,7 @@ func handleInstancesSnapshotRestore(ctx context.Context, cmd *cli.Command) error
 		return err
 	}
 	fmt.Fprintf(os.Stderr, "Restored snapshot %s for %s\n", args[1], args[0])
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesSnapshotDeleteCmd = cli.Command{
@@ -958,7 +958,7 @@ func handleInstancesReinstall(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesReinstallImagesCmd = cli.Command{
@@ -982,7 +982,7 @@ func handleInstancesReinstallImages(ctx context.Context, cmd *cli.Command) error
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesCancelTerminationCmd = cli.Command{
@@ -1031,7 +1031,7 @@ func handleInstancesResetPassword(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesSecurityGroupsCmd = cli.Command{
@@ -1055,7 +1055,7 @@ func handleInstancesSecurityGroups(ctx context.Context, cmd *cli.Command) error 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesAttachSecurityGroupsCmd = cli.Command{
@@ -1083,7 +1083,7 @@ func handleInstancesAttachSecurityGroups(ctx context.Context, cmd *cli.Command) 
 		return err
 	}
 	fmt.Fprintf(os.Stderr, "Attached security groups to %s\n", args[0])
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesDetachSecurityGroupsCmd = cli.Command{
@@ -1111,7 +1111,7 @@ func handleInstancesDetachSecurityGroups(ctx context.Context, cmd *cli.Command) 
 		return err
 	}
 	fmt.Fprintf(os.Stderr, "Detached security groups from %s\n", args[0])
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesAddToPrivateNetworkCmd = cli.Command{
@@ -1140,7 +1140,7 @@ func handleInstancesAddToPrivateNetwork(ctx context.Context, cmd *cli.Command) e
 		return err
 	}
 	fmt.Fprintf(os.Stderr, "Added %s to private network\n", args[0])
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesRemoveFromPrivateNetworkCmd = cli.Command{
@@ -1194,7 +1194,7 @@ func handleInstancesAttachISO(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 	fmt.Fprintf(os.Stderr, "Attached ISO to %s\n", args[0])
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesDetachISOCmd = cli.Command{
@@ -1219,7 +1219,7 @@ func handleInstancesDetachISO(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 	fmt.Fprintf(os.Stderr, "Detached ISO from %s\n", args[0])
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesUserDataCmd = cli.Command{
@@ -1243,7 +1243,7 @@ func handleInstancesUserData(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesMonitoringEnableCmd = cli.Command{
@@ -1292,7 +1292,7 @@ func handleInstancesMonitoringStatus(ctx context.Context, cmd *cli.Command) erro
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesNotifDatatrafficListCmd = cli.Command{
@@ -1316,7 +1316,7 @@ func handleInstancesNotifDatatrafficList(ctx context.Context, cmd *cli.Command) 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesNotifDatatrafficGetCmd = cli.Command{
@@ -1340,7 +1340,7 @@ func handleInstancesNotifDatatrafficGet(ctx context.Context, cmd *cli.Command) e
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesNotifDatatrafficCreateCmd = cli.Command{
@@ -1367,7 +1367,7 @@ func handleInstancesNotifDatatrafficCreate(ctx context.Context, cmd *cli.Command
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesNotifDatatrafficUpdateCmd = cli.Command{
@@ -1394,7 +1394,7 @@ func handleInstancesNotifDatatrafficUpdate(ctx context.Context, cmd *cli.Command
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesNotifDatatrafficDeleteCmd = cli.Command{
@@ -1443,7 +1443,7 @@ func handleInstancesTypesUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesImageCreateCmd = cli.Command{
@@ -1465,7 +1465,7 @@ func handleInstancesImageCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesImageUpdateCmd = cli.Command{
@@ -1492,7 +1492,7 @@ func handleInstancesImageUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesISOsCmd = cli.Command{
@@ -1511,7 +1511,7 @@ func handleInstancesISOs(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesExpensesCmd = cli.Command{
@@ -1535,7 +1535,7 @@ func handleInstancesExpenses(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var instancesMarketAppsCmd = cli.Command{
@@ -1554,5 +1554,5 @@ func handleInstancesMarketApps(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }

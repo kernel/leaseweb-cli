@@ -35,7 +35,7 @@ func handleNEList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var neGetCmd = cli.Command{Name: "get", Usage: "Get network equipment", ArgsUsage: "<id>", Action: handleNEGet, HideHelpCommand: true}
@@ -53,7 +53,7 @@ func handleNEGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var neUpdateCmd = cli.Command{
@@ -76,7 +76,7 @@ func handleNEUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var neCredentialsCmd = cli.Command{Name: "credentials", Usage: "List credentials", ArgsUsage: "<id>", Action: handleNECredentials, HideHelpCommand: true}
@@ -94,7 +94,7 @@ func handleNECredentials(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var neCredentialCreateCmd = cli.Command{
@@ -119,7 +119,7 @@ func handleNECredentialCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var neCredentialsByTypeCmd = cli.Command{Name: "credentials-by-type", Usage: "List credentials by type", ArgsUsage: "<id> <type>", Action: handleNECredentialsByType, HideHelpCommand: true}
@@ -137,7 +137,7 @@ func handleNECredentialsByType(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var neCredentialGetCmd = cli.Command{Name: "credential-get", Usage: "Get credential", ArgsUsage: "<id> <type> <username>", Action: handleNECredentialGet, HideHelpCommand: true}
@@ -155,7 +155,7 @@ func handleNECredentialGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var neCredentialUpdateCmd = cli.Command{
@@ -178,7 +178,7 @@ func handleNECredentialUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var neCredentialDeleteCmd = cli.Command{Name: "credential-delete", Usage: "Delete credential", ArgsUsage: "<id> <type> <username>", Action: handleNECredentialDelete, HideHelpCommand: true}
@@ -215,7 +215,7 @@ func handleNEIPs(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var neIPGetCmd = cli.Command{Name: "ip-get", Usage: "Get IP", ArgsUsage: "<id> <ip>", Action: handleNEIPGet, HideHelpCommand: true}
@@ -233,7 +233,7 @@ func handleNEIPGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var neIPUpdateCmd = cli.Command{
@@ -256,7 +256,7 @@ func handleNEIPUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var neIPNullCmd = cli.Command{Name: "ip-null", Usage: "Null route IP", ArgsUsage: "<id> <ip>", Action: handleNEIPNull, HideHelpCommand: true}
@@ -312,7 +312,7 @@ func handleNENullRouteHistory(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var nePowerCycleCmd = cli.Command{Name: "power-cycle", Usage: "Power cycle", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -345,7 +345,7 @@ var nePowerStatusCmd = cli.Command{Name: "power-status", Usage: "Show power stat
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var nePowerOffCmd = cli.Command{Name: "power-off", Usage: "Power off", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {

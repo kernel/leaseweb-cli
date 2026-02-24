@@ -34,7 +34,7 @@ func handleVSList(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vsGetCmd = cli.Command{Name: "get", Usage: "Get virtual server details", ArgsUsage: "<id>", Action: handleVSGet, HideHelpCommand: true}
@@ -52,7 +52,7 @@ func handleVSGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vsUpdateCmd = cli.Command{
@@ -74,7 +74,7 @@ func handleVSUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vsPowerOnCmd = cli.Command{Name: "power-on", Usage: "Power on", ArgsUsage: "<id>", Action: handleVSPowerOn, HideHelpCommand: true}
@@ -153,7 +153,7 @@ func handleVSReinstall(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vsCredentialsUpdateCmd = cli.Command{
@@ -175,7 +175,7 @@ func handleVSCredentialsUpdate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vsCredentialsByTypeCmd = cli.Command{Name: "credentials", Usage: "List credentials by type", ArgsUsage: "<id> <type>", Action: handleVSCredentialsByType, HideHelpCommand: true}
@@ -193,7 +193,7 @@ func handleVSCredentialsByType(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vsCredentialGetCmd = cli.Command{Name: "credential-get", Usage: "Get credential", ArgsUsage: "<id> <type> <username>", Action: handleVSCredentialGet, HideHelpCommand: true}
@@ -211,7 +211,7 @@ func handleVSCredentialGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vsMetricsCmd = cli.Command{
@@ -237,7 +237,7 @@ func handleVSMetrics(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vsSnapshotsCmd = cli.Command{Name: "snapshots", Usage: "List snapshots", ArgsUsage: "<id>", Action: handleVSSnapshots, HideHelpCommand: true}
@@ -255,7 +255,7 @@ func handleVSSnapshots(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vsSnapshotCreateCmd = cli.Command{Name: "snapshot-create", Usage: "Create snapshot", ArgsUsage: "<id>", Action: handleVSSnapshotCreate, HideHelpCommand: true}
@@ -273,7 +273,7 @@ func handleVSSnapshotCreate(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vsSnapshotGetCmd = cli.Command{Name: "snapshot-get", Usage: "Get snapshot", ArgsUsage: "<id> <snapshot-id>", Action: handleVSSnapshotGet, HideHelpCommand: true}
@@ -291,7 +291,7 @@ func handleVSSnapshotGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vsSnapshotDeleteCmd = cli.Command{Name: "snapshot-delete", Usage: "Delete snapshot", ArgsUsage: "<id> <snapshot-id>", Action: handleVSSnapshotDelete, HideHelpCommand: true}
@@ -328,7 +328,7 @@ func handleVSSnapshotRestore(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var vsTemplatesCmd = cli.Command{Name: "templates", Usage: "List templates", ArgsUsage: "<id>", Action: handleVSTemplates, HideHelpCommand: true}
@@ -346,5 +346,5 @@ func handleVSTemplates(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }

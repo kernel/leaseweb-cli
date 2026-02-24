@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"sort"
+	"strings"
 
-	"github.com/tidwall/gjson"
 	"github.com/urfave/cli/v3"
 )
 
@@ -40,7 +41,7 @@ func handleInvoicesList(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 
-	format := cmd.Root().String("format")
+	format := cmd.Root().String("output")
 	if format != "auto" {
 		return ShowResult(os.Stdout, res, format, cmd.Root().String("transform"))
 	}
@@ -51,20 +52,31 @@ func handleInvoicesList(ctx context.Context, cmd *cli.Command) error {
 		return nil
 	}
 
+	items := invoices.Array()
+	sort.Slice(items, func(i, j int) bool {
+		return items[i].Get("date").String() > items[j].Get("date").String()
+	})
+
 	table := NewTableWriter(os.Stdout, "ID", "DATE", "STATUS", "TOTAL", "CURRENCY", "DUE DATE")
-	invoices.ForEach(func(_, inv gjson.Result) bool {
+	for _, inv := range items {
 		table.AddRow(
 			inv.Get("id").String(),
-			inv.Get("date").String(),
+			dateOnly(inv.Get("date").String()),
 			inv.Get("status").String(),
 			fmt.Sprintf("%.2f", inv.Get("total").Float()),
 			inv.Get("currency").String(),
-			inv.Get("dueDate").String(),
+			dateOnly(inv.Get("dueDate").String()),
 		)
-		return true
-	})
+	}
 	table.Render()
 	return nil
+}
+
+func dateOnly(s string) string {
+	if i := strings.IndexByte(s, 'T'); i > 0 {
+		return s[:i]
+	}
+	return s
 }
 
 var invoicesGetCmd = cli.Command{
@@ -88,7 +100,7 @@ func handleInvoicesGet(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }
 
 var invoicesPDFCmd = cli.Command{
@@ -183,5 +195,5 @@ func handleInvoicesProforma(ctx context.Context, cmd *cli.Command) error {
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }

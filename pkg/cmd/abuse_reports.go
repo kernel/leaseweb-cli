@@ -39,7 +39,7 @@ var abuseListCmd = cli.Command{Name: "list", Usage: "List abuse reports", Flags:
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var abuseGetCmd = cli.Command{Name: "get", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -55,7 +55,7 @@ var abuseGetCmd = cli.Command{Name: "get", ArgsUsage: "<id>", Action: func(ctx c
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var abuseResolveCmd = cli.Command{Name: "resolve", Usage: "Resolve abuse report", ArgsUsage: "<id>", Flags: []cli.Flag{&cli.StringSliceFlag{Name: "resolution", Required: true}}, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -89,7 +89,7 @@ var abuseMessagesCmd = cli.Command{Name: "messages", ArgsUsage: "<id>", Action: 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var abuseMessageCreateCmd = cli.Command{Name: "message-create", ArgsUsage: "<id>", Flags: []cli.Flag{&cli.StringFlag{Name: "body", Required: true}}, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -106,7 +106,7 @@ var abuseMessageCreateCmd = cli.Command{Name: "message-create", ArgsUsage: "<id>
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var abuseAttachmentsCmd = cli.Command{Name: "attachments", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -122,7 +122,7 @@ var abuseAttachmentsCmd = cli.Command{Name: "attachments", ArgsUsage: "<id>", Ac
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var abuseAttachmentGetCmd = cli.Command{Name: "attachment-get", ArgsUsage: "<id> <attachment-id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -138,7 +138,7 @@ var abuseAttachmentGetCmd = cli.Command{Name: "attachment-get", ArgsUsage: "<id>
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var abuseResolutionOptionsCmd = cli.Command{Name: "resolution-options", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -154,5 +154,5 @@ var abuseResolutionOptionsCmd = cli.Command{Name: "resolution-options", ArgsUsag
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}

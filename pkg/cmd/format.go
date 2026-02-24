@@ -12,7 +12,7 @@ import (
 	"golang.org/x/term"
 )
 
-var OutputFormats = []string{"auto", "json", "pretty", "raw", "yaml"}
+var OutputFormats = []string{"auto", "json", "jsonline", "pretty", "raw", "yaml"}
 
 func isTerminal(w io.Writer) bool {
 	switch v := w.(type) {
@@ -46,7 +46,10 @@ func ShowJSON(out *os.File, raw string, format string, transform string) error {
 		}
 	}
 	switch strings.ToLower(format) {
-	case "auto", "json":
+	case "auto":
+		ShowDetail(out, res)
+		return nil
+	case "json":
 		prettyJSON := pretty.Pretty([]byte(res.Raw))
 		if shouldUseColors(out) {
 			_, err := out.Write(pretty.Color(prettyJSON, pretty.TerminalStyle))
@@ -57,6 +60,9 @@ func ShowJSON(out *os.File, raw string, format string, transform string) error {
 	case "pretty":
 		prettyJSON := pretty.Pretty([]byte(res.Raw))
 		_, err := out.Write(prettyJSON)
+		return err
+	case "jsonline":
+		_, err := out.Write([]byte(res.Raw + "\n"))
 		return err
 	case "raw":
 		_, err := out.Write([]byte(res.Raw + "\n"))

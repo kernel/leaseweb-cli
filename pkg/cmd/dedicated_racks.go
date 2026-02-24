@@ -38,7 +38,7 @@ var drListCmd = cli.Command{Name: "list", Usage: "List dedicated racks", Flags: 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drGetCmd = cli.Command{Name: "get", Usage: "Get dedicated rack", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -54,7 +54,7 @@ var drGetCmd = cli.Command{Name: "get", Usage: "Get dedicated rack", ArgsUsage: 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drUpdateCmd = cli.Command{Name: "update", Usage: "Update", ArgsUsage: "<id>", Flags: []cli.Flag{&cli.StringFlag{Name: "reference", Required: true}}, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -71,7 +71,7 @@ var drUpdateCmd = cli.Command{Name: "update", Usage: "Update", ArgsUsage: "<id>"
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drCredentialsCmd = cli.Command{Name: "credentials", Usage: "List credentials", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -87,7 +87,7 @@ var drCredentialsCmd = cli.Command{Name: "credentials", Usage: "List credentials
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drCredentialCreateCmd = cli.Command{Name: "credential-create", Usage: "Create credential", ArgsUsage: "<id>", Flags: []cli.Flag{&cli.StringFlag{Name: "type", Required: true}, &cli.StringFlag{Name: "username", Required: true}, &cli.StringFlag{Name: "password", Required: true}}, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -104,7 +104,7 @@ var drCredentialCreateCmd = cli.Command{Name: "credential-create", Usage: "Creat
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drCredentialsByTypeCmd = cli.Command{Name: "credentials-by-type", Usage: "List by type", ArgsUsage: "<id> <type>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -120,7 +120,7 @@ var drCredentialsByTypeCmd = cli.Command{Name: "credentials-by-type", Usage: "Li
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drCredentialGetCmd = cli.Command{Name: "credential-get", Usage: "Get credential", ArgsUsage: "<id> <type> <username>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -136,7 +136,7 @@ var drCredentialGetCmd = cli.Command{Name: "credential-get", Usage: "Get credent
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drCredentialUpdateCmd = cli.Command{Name: "credential-update", Usage: "Update credential", ArgsUsage: "<id> <type> <username>", Flags: []cli.Flag{&cli.StringFlag{Name: "password", Required: true}}, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -153,7 +153,7 @@ var drCredentialUpdateCmd = cli.Command{Name: "credential-update", Usage: "Updat
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drCredentialDeleteCmd = cli.Command{Name: "credential-delete", Usage: "Delete credential", ArgsUsage: "<id> <type> <username>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -186,7 +186,7 @@ var drIPsCmd = cli.Command{Name: "ips", Usage: "List IPs", ArgsUsage: "<id>", Ac
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drIPGetCmd = cli.Command{Name: "ip-get", ArgsUsage: "<id> <ip>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -202,7 +202,7 @@ var drIPGetCmd = cli.Command{Name: "ip-get", ArgsUsage: "<id> <ip>", Action: fun
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drIPUpdateCmd = cli.Command{Name: "ip-update", ArgsUsage: "<id> <ip>", Flags: []cli.Flag{&cli.StringFlag{Name: "reverse-lookup", Required: true}}, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -219,7 +219,7 @@ var drIPUpdateCmd = cli.Command{Name: "ip-update", ArgsUsage: "<id> <ip>", Flags
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drIPNullCmd = cli.Command{Name: "ip-null", ArgsUsage: "<id> <ip>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -270,7 +270,7 @@ var drMetricsBandwidthCmd = cli.Command{Name: "metrics-bandwidth", Usage: "Bandw
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drMetricsDatatrafficCmd = cli.Command{Name: "metrics-datatraffic", Usage: "Datatraffic metrics", ArgsUsage: "<id>", Flags: []cli.Flag{&cli.StringFlag{Name: "from", Required: true}, &cli.StringFlag{Name: "to", Required: true}, &cli.StringFlag{Name: "aggregation", Value: "SUM"}}, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -287,7 +287,7 @@ var drMetricsDatatrafficCmd = cli.Command{Name: "metrics-datatraffic", Usage: "D
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drNullRouteHistoryCmd = cli.Command{Name: "null-route-history", ArgsUsage: "<id>", Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -303,7 +303,7 @@ var drNullRouteHistoryCmd = cli.Command{Name: "null-route-history", ArgsUsage: "
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 func drNotifHandler(settingType, method string) func(context.Context, *cli.Command) error {
@@ -323,7 +323,7 @@ func drNotifHandler(settingType, method string) func(context.Context, *cli.Comma
 			if err != nil {
 				return err
 			}
-			return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+			return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 		case "get":
 			if len(args) < 2 {
 				return fmt.Errorf("rack ID and notification ID required")
@@ -332,7 +332,7 @@ func drNotifHandler(settingType, method string) func(context.Context, *cli.Comma
 			if err != nil {
 				return err
 			}
-			return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+			return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 		case "create":
 			if len(args) < 1 {
 				return fmt.Errorf("rack ID required")
@@ -341,7 +341,7 @@ func drNotifHandler(settingType, method string) func(context.Context, *cli.Comma
 			if err != nil {
 				return err
 			}
-			return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+			return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 		case "update":
 			if len(args) < 2 {
 				return fmt.Errorf("rack ID and notification ID required")
@@ -350,7 +350,7 @@ func drNotifHandler(settingType, method string) func(context.Context, *cli.Comma
 			if err != nil {
 				return err
 			}
-			return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+			return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 		case "delete":
 			if len(args) < 2 {
 				return fmt.Errorf("rack ID and notification ID required")
@@ -392,7 +392,7 @@ var drNotifDDoSGetCmd = cli.Command{Name: "notif-ddos-get", ArgsUsage: "<id>", A
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var drNotifDDoSUpdateCmd = cli.Command{Name: "notif-ddos-update", ArgsUsage: "<id>", Flags: payloadFlag, Action: func(ctx context.Context, cmd *cli.Command) error {
@@ -408,5 +408,5 @@ var drNotifDDoSUpdateCmd = cli.Command{Name: "notif-ddos-update", ArgsUsage: "<i
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}

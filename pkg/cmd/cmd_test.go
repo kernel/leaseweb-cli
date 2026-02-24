@@ -30,8 +30,13 @@ func jsonResponse(w http.ResponseWriter, statusCode int, body any) {
 	_ = json.NewEncoder(w).Encode(body)
 }
 
-func runCLI(t *testing.T, args []string) (stdout string, stderr string, err error) {
+func runCLI(t *testing.T, baseURL string, args []string) (stdout string, stderr string, err error) {
 	t.Helper()
+
+	t.Setenv("LEASEWEB_API_KEY", "test-key")
+	if baseURL != "" {
+		t.Setenv("LEASEWEB_BASE_URL", baseURL)
+	}
 
 	oldStdout := os.Stdout
 	oldStderr := os.Stderr
@@ -85,9 +90,7 @@ func TestDedicatedServersList(t *testing.T) {
 	})
 	defer srv.Close()
 
-	stdout, _, err := runCLI(t, []string{
-		"--api-key", "test-key",
-		"--base-url", srv.URL,
+	stdout, _, err := runCLI(t, srv.URL, []string{
 		"dedicated-servers", "list",
 	})
 	require.NoError(t, err)
@@ -109,10 +112,8 @@ func TestDedicatedServersGet(t *testing.T) {
 	})
 	defer srv.Close()
 
-	stdout, _, err := runCLI(t, []string{
-		"--api-key", "test-key",
-		"--base-url", srv.URL,
-		"--format", "raw",
+	stdout, _, err := runCLI(t, srv.URL, []string{
+		"--output", "raw",
 		"dedicated-servers", "get", "12345",
 	})
 	require.NoError(t, err)
@@ -120,9 +121,7 @@ func TestDedicatedServersGet(t *testing.T) {
 }
 
 func TestDedicatedServersGetMissingID(t *testing.T) {
-	_, _, err := runCLI(t, []string{
-		"--api-key", "test-key",
-		"--base-url", "http://localhost",
+	_, _, err := runCLI(t, "", []string{
 		"dedicated-servers", "get",
 	})
 	require.Error(t, err)
@@ -148,9 +147,7 @@ func TestIPsList(t *testing.T) {
 	})
 	defer srv.Close()
 
-	stdout, _, err := runCLI(t, []string{
-		"--api-key", "test-key",
-		"--base-url", srv.URL,
+	stdout, _, err := runCLI(t, srv.URL, []string{
 		"ips", "list",
 	})
 	require.NoError(t, err)
@@ -178,9 +175,7 @@ func TestInvoicesList(t *testing.T) {
 	})
 	defer srv.Close()
 
-	stdout, _, err := runCLI(t, []string{
-		"--api-key", "test-key",
-		"--base-url", srv.URL,
+	stdout, _, err := runCLI(t, srv.URL, []string{
 		"invoices", "list",
 	})
 	require.NoError(t, err)
@@ -207,9 +202,7 @@ func TestServicesList(t *testing.T) {
 	})
 	defer srv.Close()
 
-	stdout, _, err := runCLI(t, []string{
-		"--api-key", "test-key",
-		"--base-url", srv.URL,
+	stdout, _, err := runCLI(t, srv.URL, []string{
 		"services", "list",
 	})
 	require.NoError(t, err)
@@ -228,9 +221,7 @@ func TestAPIErrorHandling(t *testing.T) {
 	})
 	defer srv.Close()
 
-	_, _, err := runCLI(t, []string{
-		"--api-key", "test-key",
-		"--base-url", srv.URL,
+	_, _, err := runCLI(t, srv.URL, []string{
 		"dedicated-servers", "get", "bad-id",
 	})
 	require.Error(t, err)
@@ -252,10 +243,8 @@ func TestJSONFormat(t *testing.T) {
 	})
 	defer srv.Close()
 
-	stdout, _, err := runCLI(t, []string{
-		"--api-key", "test-key",
-		"--base-url", srv.URL,
-		"--format", "json",
+	stdout, _, err := runCLI(t, srv.URL, []string{
+		"--output", "json",
 		"dedicated-servers", "get", "12345",
 	})
 	require.NoError(t, err)
@@ -274,10 +263,8 @@ func TestYAMLFormat(t *testing.T) {
 	})
 	defer srv.Close()
 
-	stdout, _, err := runCLI(t, []string{
-		"--api-key", "test-key",
-		"--base-url", srv.URL,
-		"--format", "yaml",
+	stdout, _, err := runCLI(t, srv.URL, []string{
+		"--output", "yaml",
 		"dedicated-servers", "get", "12345",
 	})
 	require.NoError(t, err)
@@ -300,10 +287,8 @@ func TestTransform(t *testing.T) {
 	})
 	defer srv.Close()
 
-	stdout, _, err := runCLI(t, []string{
-		"--api-key", "test-key",
-		"--base-url", srv.URL,
-		"--format", "raw",
+	stdout, _, err := runCLI(t, srv.URL, []string{
+		"--output", "raw",
 		"--transform", "location.site",
 		"dedicated-servers", "get", "12345",
 	})
@@ -322,9 +307,7 @@ func TestEmptyListOutput(t *testing.T) {
 	})
 	defer srv.Close()
 
-	_, stderr, err := runCLI(t, []string{
-		"--api-key", "test-key",
-		"--base-url", srv.URL,
+	_, stderr, err := runCLI(t, srv.URL, []string{
 		"dedicated-servers", "list",
 	})
 	require.NoError(t, err)
@@ -343,9 +326,7 @@ func TestPagination(t *testing.T) {
 	})
 	defer srv.Close()
 
-	_, _, err := runCLI(t, []string{
-		"--api-key", "test-key",
-		"--base-url", srv.URL,
+	_, _, err := runCLI(t, srv.URL, []string{
 		"dedicated-servers", "list", "--limit", "5", "--offset", "10",
 	})
 	require.NoError(t, err)
@@ -407,7 +388,7 @@ func parseTime(s string) time.Time {
 }
 
 func TestConfigCommands(t *testing.T) {
-	stdout, _, err := runCLI(t, []string{"config", "show"})
+	stdout, _, err := runCLI(t, "", []string{"config", "show"})
 	require.NoError(t, err)
 	_ = stdout
 }

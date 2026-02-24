@@ -50,7 +50,7 @@ func cdnCRUD(basePath string, minArgs int, argErr string) func(context.Context, 
 		if err != nil {
 			return err
 		}
-		return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+		return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 	}
 }
 
@@ -72,7 +72,7 @@ func cdnPost(basePath string, minArgs int, argErr string) func(context.Context, 
 		if err != nil {
 			return err
 		}
-		return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+		return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 	}
 }
 
@@ -94,7 +94,7 @@ func cdnPut(basePath string, minArgs int, argErr string) func(context.Context, *
 		if err != nil {
 			return err
 		}
-		return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+		return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 	}
 }
 
@@ -131,7 +131,7 @@ var cdnDistributionsListCmd = cli.Command{Name: "list", Usage: "List distributio
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 var cdnDistributionCreateCmd = cli.Command{Name: "create", Usage: "Create distribution", Flags: payloadFlag, Action: cdnPost("/cdn/v2/distributions", 0, ""), HideHelpCommand: true}
@@ -201,7 +201,7 @@ func cdnMetricHandler(metricType string) func(context.Context, *cli.Command) err
 		if err != nil {
 			return err
 		}
-		return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+		return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 	}
 }
 
@@ -229,7 +229,7 @@ var cdnAccessLogsCmd = cli.Command{Name: "access-logs", ArgsUsage: "<dist-id>", 
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 // Edge Locations
@@ -242,7 +242,7 @@ var cdnEdgeLocationsCmd = cli.Command{Name: "edge-locations", Usage: "List CDN e
 	if err != nil {
 		return err
 	}
-	return ShowResult(os.Stdout, res, cmd.Root().String("format"), cmd.Root().String("transform"))
+	return ShowResult(os.Stdout, res, cmd.Root().String("output"), cmd.Root().String("transform"))
 }, HideHelpCommand: true}
 
 // Token Auth
