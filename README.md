@@ -240,4 +240,4 @@ make vet
 
 ## License
 
-Apache-2.0
+MIT

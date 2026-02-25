@@ -62,7 +62,7 @@ snapshot:
   version_template: '{{ .Tag }}-next'
 
 nfpms:
-  - license: Apache-2.0
+  -     license: MIT
     maintainer: Kernel <support@kernel.sh>
     bindir: /usr
     formats:
@@ -80,7 +80,7 @@ brews:
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     homepage: https://github.com/kernel/leaseweb-cli
     description: CLI for the Leaseweb API
-    license: Apache-2.0
+    license: MIT
     directory: Formula
     install: |
       bin.install "lw"
