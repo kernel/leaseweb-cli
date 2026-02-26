@@ -16,6 +16,16 @@ brew install kernel/tap/lw
 go install github.com/kernel/leaseweb-cli/cmd/lw@latest
 ```
 
+### From source
+
+```sh
+git clone https://github.com/kernel/leaseweb-cli.git
+cd leaseweb-cli
+make build && sudo make install
+```
+
+This builds the binary and installs it to `/usr/local/bin/lw`. To uninstall: `sudo make uninstall`.
+
 ### Binary releases
 
 Download pre-built binaries from the [Releases](https://github.com/kernel/leaseweb-cli/releases) page.
@@ -102,6 +112,7 @@ COMMANDS:
    ips                     Manage IP addresses
    load-balancers, lb      Manage public cloud load balancers
    network-equipment, ne   Manage dedicated network equipment
+   orders                  Manage orders and product catalog
    private-clouds, pc      Manage private clouds
    private-networks, pn    Manage private networks
    remote-management, rm   Manage OpenVPN remote management
@@ -152,6 +163,15 @@ lw services list
 lw instances list
 lw instances regions
 lw instances types --region eu-west-3
+
+# Orders
+lw orders list
+lw orders get 41002016
+
+# Browse product catalog
+lw orders products ds list
+lw orders products ds get SERVER-1 --location AMS-01
+lw orders products vps list
 
 # DNS management
 lw domains list
@@ -208,6 +228,7 @@ Use `lw <command> --help` for details on any subcommand. Here's a summary:
 | `invoices` | | List, get, PDF download, proforma, CSV export |
 | `ips` | | List, get, update, null route, reverse lookup (IPv4 + IPv6) |
 | `load-balancers` | `lb` | CRUD, listeners, IPs, metrics, monitoring |
+| `orders` | | List orders, browse product catalog, order dedicated servers and VPS |
 | `network-equipment` | `ne` | CRUD equipment, credentials, IPs, power, null routes |
 | `private-clouds` | `pc` | CRUD private clouds, credentials, metrics |
 | `private-networks` | `pn` | CRUD networks, servers, DHCP reservations |
@@ -225,8 +246,11 @@ Use `lw <command> --help` for details on any subcommand. Here's a summary:
 # Build
 make build
 
-# Install to $GOPATH/bin
-make install
+# Install to /usr/local/bin (build first as your user)
+make build && sudo make install
+
+# Uninstall
+sudo make uninstall
 
 # Run tests
 make test
