@@ -438,6 +438,10 @@ var dsInstallCmd = cli.Command{
 			Name:  "hostname",
 			Usage: "Server hostname",
 		},
+		&cli.StringFlag{
+			Name:  "device",
+			Usage: "Boot device (SATA_SAS, NVME, or a disk set ID)",
+		},
 	},
 	Action:          handleDSInstall,
 	HideHelpCommand: true,
@@ -457,6 +461,9 @@ func handleDSInstall(ctx context.Context, cmd *cli.Command) error {
 	}
 	if h := cmd.String("hostname"); h != "" {
 		payload["hostname"] = h
+	}
+	if d := cmd.String("device"); d != "" {
+		payload["device"] = d
 	}
 	body, _ := json.Marshal(payload)
 	res, err := client.PostJSON(ctx, "/bareMetals/v2/servers/"+args[0]+"/install", body)
