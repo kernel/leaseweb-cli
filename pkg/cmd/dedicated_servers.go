@@ -447,8 +447,9 @@ var dsInstallCmd = cli.Command{
 			Usage: "Public SSH key to install (can be repeated)",
 		},
 	},
-	Action:          handleDSInstall,
-	HideHelpCommand: true,
+	Action:                    handleDSInstall,
+	DisableSliceFlagSeparator: true,
+	HideHelpCommand:           true,
 }
 
 func handleDSInstall(ctx context.Context, cmd *cli.Command) error {

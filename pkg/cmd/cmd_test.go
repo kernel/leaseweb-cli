@@ -129,7 +129,7 @@ func TestDedicatedServersGetMissingID(t *testing.T) {
 }
 
 func TestDedicatedServersInstallWithSSHKeys(t *testing.T) {
-	const firstKey = "ssh-ed25519 AAAAC3NzaFirst first@example.com"
+	const firstKey = "ssh-ed25519 AAAAC3NzaFirst first,deploy@example.com"
 	const secondKey = "ssh-ed25519 AAAAC3NzaSecond second@example.com"
 
 	for _, test := range []struct {
