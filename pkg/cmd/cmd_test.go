@@ -128,6 +128,43 @@ func TestDedicatedServersGetMissingID(t *testing.T) {
 	assert.Contains(t, err.Error(), "server ID required")
 }
 
+func TestDedicatedServersInstallWithSSHKeys(t *testing.T) {
+	const firstKey = "ssh-ed25519 AAAAC3NzaFirst first@example.com"
+	const secondKey = "ssh-ed25519 AAAAC3NzaSecond second@example.com"
+
+	for _, test := range []struct {
+		name     string
+		keys     []string
+		expected string
+	}{
+		{name: "one key", keys: []string{firstKey}, expected: firstKey},
+		{name: "multiple keys", keys: []string{firstKey, secondKey}, expected: firstKey + "\n" + secondKey},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			srv := newTestServer(t, map[string]http.HandlerFunc{
+				"POST /bareMetals/v2/servers/12345/install": func(w http.ResponseWriter, r *http.Request) {
+					var payload map[string]any
+					require.NoError(t, json.NewDecoder(r.Body).Decode(&payload))
+					assert.Equal(t, "UBUNTU_26_04_64BIT", payload["operatingSystemId"])
+					assert.Equal(t, test.expected, payload["sshKeys"])
+					jsonResponse(w, http.StatusAccepted, map[string]any{"status": "PENDING"})
+				},
+			})
+			defer srv.Close()
+
+			args := []string{
+				"dedicated-servers", "install", "12345",
+				"--os", "UBUNTU_26_04_64BIT",
+			}
+			for _, key := range test.keys {
+				args = append(args, "--ssh-key", key)
+			}
+			_, _, err := runCLI(t, srv.URL, args)
+			require.NoError(t, err)
+		})
+	}
+}
+
 func TestIPsList(t *testing.T) {
 	srv := newTestServer(t, map[string]http.HandlerFunc{
 		"GET /ipMgmt/v2/ips": func(w http.ResponseWriter, r *http.Request) {

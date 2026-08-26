@@ -442,6 +442,10 @@ var dsInstallCmd = cli.Command{
 			Name:  "device",
 			Usage: "Boot device (SATA_SAS, NVME, or a disk set ID)",
 		},
+		&cli.StringSliceFlag{
+			Name:  "ssh-key",
+			Usage: "Public SSH key to install (can be repeated)",
+		},
 	},
 	Action:          handleDSInstall,
 	HideHelpCommand: true,
@@ -464,6 +468,9 @@ func handleDSInstall(ctx context.Context, cmd *cli.Command) error {
 	}
 	if d := cmd.String("device"); d != "" {
 		payload["device"] = d
+	}
+	if sshKeys := cmd.StringSlice("ssh-key"); len(sshKeys) > 0 {
+		payload["sshKeys"] = strings.Join(sshKeys, "\n")
 	}
 	body, _ := json.Marshal(payload)
 	res, err := client.PostJSON(ctx, "/bareMetals/v2/servers/"+args[0]+"/install", body)
