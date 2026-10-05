@@ -129,8 +129,8 @@ var servicesCancelCmd = cli.Command{
 	Usage:     "Cancel a service",
 	ArgsUsage: "<service-id>",
 	Flags: []cli.Flag{
-		&cli.StringFlag{Name: "reason", Usage: "Cancellation reason", Required: true},
-		&cli.StringFlag{Name: "reason-detail", Usage: "Cancellation reason detail"},
+		&cli.StringFlag{Name: "reason", Usage: "Cancellation reason code (see services cancellation-reasons)", Required: true},
+		&cli.StringFlag{Name: "reason-detail", Usage: "Cancellation reason text (required for CANCEL_OTHER)"},
 	},
 	Action:          handleServicesCancel,
 	HideHelpCommand: true,
@@ -146,10 +146,10 @@ func handleServicesCancel(ctx context.Context, cmd *cli.Command) error {
 		return err
 	}
 	payload := map[string]string{
-		"reason": cmd.String("reason"),
+		"reasonCode": cmd.String("reason"),
 	}
 	if d := cmd.String("reason-detail"); d != "" {
-		payload["reasonDetail"] = d
+		payload["reason"] = d
 	}
 	body, _ := json.Marshal(payload)
 	_, err = client.PostJSON(ctx, "/services/v1/services/"+args[0]+"/cancel", body)
