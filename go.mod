@@ -1,6 +1,6 @@
 module github.com/kernel/leaseweb-cli
 
-go 1.27.2
+go 1.27.3
 
 require (
 	github.com/itchyny/json2yaml v0.1.4
